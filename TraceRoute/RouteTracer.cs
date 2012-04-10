@@ -32,8 +32,8 @@ namespace TraceRoute
                 watch.Reset();
                 watch.Start();
 
-                PingReply reply;
                 // make sure that the address is a vaild one
+                PingReply reply;
                 try
                 {
                     reply = pinger.Send(ipAddrOrHostname, timeout, buffer, pingOpts);
@@ -44,11 +44,21 @@ namespace TraceRoute
                 }
                 watch.Stop();
 
-                // save all the hop information
-                Hop curHop = new Hop(i, reply.Address, watch.ElapsedMilliseconds);
+
+                // catch and fix timed out hops
+                Hop curHop;
+                if (reply.Status != IPStatus.TimedOut)
+                    curHop = new Hop(i, reply.Address.ToString(), watch.ElapsedMilliseconds, false);
+                else
+                    curHop = new Hop(i, "Request timed out", watch.ElapsedMilliseconds, true);
+
                 hops.Add(curHop);
-                if (reply.Status == IPStatus.Success)   // destination reached
+
+                // destination reached
+                if (reply.Status == IPStatus.Success)   
                     break;
+                
+                // increment hops by 1
                 pingOpts.Ttl++;
             }
             return hops;
@@ -58,14 +68,16 @@ namespace TraceRoute
     public class Hop
     {
         public int hopNum;      // number of hop in trace route
-        public IPAddress ip;    // ip address of hop
+        public string ip;       // ip address of hop
         public long time;       // time hop took in ms
+        public bool timedOut;   // did the hop time out?
 
-        public Hop(int hopNum, IPAddress ip, long time)
+        public Hop(int hopNum, string ip, long time, bool timedOut)
         {
             this.hopNum = hopNum;
             this.ip = ip;
             this.time = time;
+            this.timedOut = timedOut;
         }
     }
 }
