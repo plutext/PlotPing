@@ -64,7 +64,7 @@ namespace MainForm
                     e.Cancel = true;
                     break;
                 }
-                List<Hop> hops = RouteTracer.traceRoute(hostOrIp);
+                List<Hop> hops = RouteTracer.traceRoute(hostOrIp, timeout: 1000);
                 tracertBackgroundWorker.ReportProgress(i, hops);
                 Thread.Sleep(tsleep);
             }
@@ -95,7 +95,7 @@ namespace MainForm
                     item.SubItems.Add(hop.time.ToString());
                     
                     // color code pings 
-                    if (hop.time < 100)
+                    if (hop.time < 100 && hop.time >= 0)
                         item.SubItems[3].BackColor = Color.Lime;
                     else if (hop.time > 100 && hop.time < 200)
                         item.SubItems[3].BackColor = Color.Yellow;
@@ -107,26 +107,32 @@ namespace MainForm
             }
             else
             {
-                int j = 0;
-                foreach(Hop hop in hops)
+                for (int j = 0; j < hops.Count; j++)
                 {
-                    if(routeListView.Items[j].SubItems[1].Text != hop.ip.ToString())
-                        routeListView.Items[j].SubItems[1].Text = hop.ip.ToString();
-                    if(routeListView.Items[j].SubItems[3].Text != hop.time.ToString())
-                        routeListView.Items[j].SubItems[3].Text = hop.time.ToString();
+                    // if prev ip != cur ip
+                    if (routeListView.Items[j].SubItems[1].Text != hops[j].ip.ToString())
+                        routeListView.Items[j].SubItems[1].Text = hops[j].ip.ToString();
+
+                    // if prev time != cur time
+                    if (routeListView.Items[j].SubItems[3].Text != hops[j].time.ToString())
+                        routeListView.Items[j].SubItems[3].Text = hops[j].time.ToString();
 
                     // color code pings 
                     Color bg = routeListView.Items[j].SubItems[3].BackColor;
-                    if (hop.time < 100 && bg != Color.Lime)
+                    if (hops[j].time < 100 && hops[j].time != -1 && bg != Color.Lime)
                         routeListView.Items[j].SubItems[3].BackColor = Color.Lime;
-                    else if (hop.time > 100 && hop.time < 200 && bg != Color.Yellow)
+                    else if (hops[j].time > 100 && hops[j].time < 200 && bg != Color.Yellow)
                         routeListView.Items[j].SubItems[3].BackColor = Color.Yellow;
-                    else if (hop.time > 200 && bg != Color.Red)
+                    else if (hops[j].time > 200 || hops[j].time == -1 && bg != Color.Red)
                         routeListView.Items[j].SubItems[3].BackColor = Color.Red;
-
-                    j++;
                 }
             }
+
+            // removes horizontal scroll bar
+            if (hops.Count > 12)
+                routeListView.Columns[3].Width = 96 - 25;
+            else
+                routeListView.Columns[3].Width = -2;
         }
 
         private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -67,7 +67,7 @@
             this.curTimeCol});
             this.routeListView.Location = new System.Drawing.Point(12, 61);
             this.routeListView.Name = "routeListView";
-            this.routeListView.Size = new System.Drawing.Size(429, 248);
+            this.routeListView.Size = new System.Drawing.Size(380, 248);
             this.routeListView.TabIndex = 8;
             this.routeListView.UseCompatibleStateImageBehavior = false;
             this.routeListView.View = System.Windows.Forms.View.Details;
@@ -75,7 +75,7 @@
             // hopCol
             // 
             this.hopCol.Text = "Hop";
-            this.hopCol.Width = 33;
+            this.hopCol.Width = 32;
             // 
             // ipCol
             // 
@@ -91,9 +91,9 @@
             // 
             // curTimeCol
             // 
-            this.curTimeCol.Text = "Cur. Time (ms)";
+            this.curTimeCol.Text = "Ping (ms)";
             this.curTimeCol.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.curTimeCol.Width = 97;
+            this.curTimeCol.Width = 96;
             // 
             // traceBtn
             // 
@@ -174,7 +174,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(453, 349);
+            this.ClientSize = new System.Drawing.Size(405, 349);
             this.Controls.Add(this.traceIntUpDown);
             this.Controls.Add(this.traceIntLbl);
             this.Controls.Add(this.nTraceUpDown);

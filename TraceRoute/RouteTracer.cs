@@ -50,7 +50,7 @@ namespace TraceRoute
                 if (reply.Status != IPStatus.TimedOut)
                     curHop = new Hop(i, reply.Address.ToString(), watch.ElapsedMilliseconds, false);
                 else
-                    curHop = new Hop(i, "Request timed out", watch.ElapsedMilliseconds, true);
+                    curHop = new Hop(i, "Request timed out", -1, true);
 
                 hops.Add(curHop);
 
