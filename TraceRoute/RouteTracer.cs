@@ -31,13 +31,18 @@ namespace TraceRoute
                 Ping pinger = new Ping();
                 watch.Reset();
                 watch.Start();
-                PingReply reply = pinger.Send(ipAddrOrHostname, timeout, buffer, pingOpts);
-                watch.Stop();
 
-                /* get hostname from ip address
-                String curHostName;
-                try{ curHostName = Dns.GetHostEntry(reply.Address).HostName; }
-                catch (SocketException){ curHostName = "--"; } */
+                PingReply reply;
+                // make sure that the address is a vaild one
+                try
+                {
+                    reply = pinger.Send(ipAddrOrHostname, timeout, buffer, pingOpts);
+                }
+                catch (PingException e)
+                {
+                    throw (e);
+                }
+                watch.Stop();
 
                 // save all the hop information
                 Hop curHop = new Hop(i, reply.Address, watch.ElapsedMilliseconds);
@@ -50,44 +55,17 @@ namespace TraceRoute
         }
     }
 
-    public class Hop : INotifyPropertyChanged
+    public class Hop
     {
-        private int _hopNum;      // number of hop in trace route
-        private IPAddress _ip;    // ip address of hop
-        private long _time;       // time hop took in ms
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-            }
-        }
+        public int hopNum;      // number of hop in trace route
+        public IPAddress ip;    // ip address of hop
+        public long time;       // time hop took in ms
 
         public Hop(int hopNum, IPAddress ip, long time)
         {
-            _hopNum = hopNum;
-            _ip = ip;
-            _time = time;
-        }
-
-        public int hopNum
-        {
-            get { return _hopNum; }
-            set { _hopNum = value; }
-        }
-
-        public IPAddress ip
-        {
-            get { return _ip; }
-            set { _ip = value; }
-        }
-
-        public long time
-        {
-            get { return _time; }
-            set { _time = value; }
+            this.hopNum = hopNum;
+            this.ip = ip;
+            this.time = time;
         }
     }
 }
