@@ -41,6 +41,8 @@
             this.nTraceUpDown = new System.Windows.Forms.NumericUpDown();
             this.traceIntLbl = new System.Windows.Forms.Label();
             this.traceIntUpDown = new System.Windows.Forms.NumericUpDown();
+            this.roundTripLbl = new System.Windows.Forms.Label();
+            this.totPingLbl = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.traceIntUpDown)).BeginInit();
             this.SuspendLayout();
@@ -170,11 +172,33 @@
             0,
             0});
             // 
+            // roundTripLbl
+            // 
+            this.roundTripLbl.AutoSize = true;
+            this.roundTripLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.roundTripLbl.Location = new System.Drawing.Point(241, 312);
+            this.roundTripLbl.Name = "roundTripLbl";
+            this.roundTripLbl.Size = new System.Drawing.Size(103, 13);
+            this.roundTripLbl.TabIndex = 15;
+            this.roundTripLbl.Text = "Round Trip Ping:";
+            // 
+            // totPingLbl
+            // 
+            this.totPingLbl.AutoSize = true;
+            this.totPingLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totPingLbl.Location = new System.Drawing.Point(350, 312);
+            this.totPingLbl.Name = "totPingLbl";
+            this.totPingLbl.Size = new System.Drawing.Size(30, 13);
+            this.totPingLbl.TabIndex = 16;
+            this.totPingLbl.Text = "N/A";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 349);
+            this.Controls.Add(this.totPingLbl);
+            this.Controls.Add(this.roundTripLbl);
             this.Controls.Add(this.traceIntUpDown);
             this.Controls.Add(this.traceIntLbl);
             this.Controls.Add(this.nTraceUpDown);
@@ -183,6 +207,7 @@
             this.Controls.Add(this.routeListView);
             this.Controls.Add(this.traceBtn);
             this.Controls.Add(this.addrLbl);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.Text = "PlotPing";
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).EndInit();
@@ -207,6 +232,8 @@
         private System.Windows.Forms.Label traceIntLbl;
         private System.Windows.Forms.NumericUpDown traceIntUpDown;
         private System.Windows.Forms.ColumnHeader curTimeCol;
+        private System.Windows.Forms.Label roundTripLbl;
+        private System.Windows.Forms.Label totPingLbl;
     }
 }
 

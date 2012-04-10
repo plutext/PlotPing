@@ -77,6 +77,7 @@ namespace MainForm
             List<Hop> hops = (List<Hop>)e.UserState;
             drawTable(hops, i);
             allRoutes.Add(hops);
+            totPingLbl.Text = hops[hops.Count-1].time.ToString() + " ms";
         }
 
         private void drawTable(List<Hop> hops, int i = 1)
@@ -107,6 +108,7 @@ namespace MainForm
             }
             else
             {
+                // FINDME: need to re-do this loop to account for the case where a new hop is added
                 for (int j = 0; j < hops.Count; j++)
                 {
                     // if prev ip != cur ip
