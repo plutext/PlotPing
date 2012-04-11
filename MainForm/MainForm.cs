@@ -107,7 +107,7 @@ namespace MainForm
                 if (hops.Last().time == -1)
                 {
                     tracertBackgroundWorker.CancelAsync();
-                    MessageBox.Show("Could not establish connection to address!");
+                    MessageBox.Show("Could not establish connection to address!  The address might be invaild or it may be down. There may also be a problem with your connection.", "PlotPing: ERROR");
                     //chartPings.Visible = false;
                     return;
                 }
