@@ -22,6 +22,8 @@ namespace MainForm
         private Series pingSeries;
         private int nTraces;
         private double traceInterval;
+        private DateTime tStart;
+        private DateTime tEnd;
 
         public MainForm()
         {
@@ -44,11 +46,20 @@ namespace MainForm
                 hostOrIp = addrComboBox.Text;
                 nTraces = (int)nTraceUpDown.Value;
                 traceInterval = (double)traceIntUpDown.Value;
+                tStart = DateTime.Now;
+                tEnd = DateTime.Now;
 
                 // start the traceroute in a separate thread
-                traceBtn.Text = "Stop";
                 tracertBackgroundWorker.RunWorkerAsync();
+                
+                // update form
+                traceBtn.Text = "Stop";
+                lblTarget.Text = hostOrIp;
+                lblStartTime.Text = tStart.ToString() + "       to";
+                lblEndTime.Visible = true;
+                lblEndTime.Text = tEnd.ToString();
                 progressBar1.Visible = true;
+
             }
             else if (tracertBackgroundWorker.IsBusy)
             {
@@ -111,12 +122,18 @@ namespace MainForm
 
             // plot results so far
             updateChart(hops.Last().time);
+
+            // update sample interval
+            tEnd = DateTime.Now;
+            lblEndTime.Text = tEnd.ToString();
         }
 
         private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             traceBtn.Text = "Trace";
             progressBar1.Visible = false;
+            tEnd = DateTime.Now;
+            lblEndTime.Text = tEnd.ToString();
         }
 
         // initializes the traceroute table
@@ -237,14 +254,22 @@ namespace MainForm
                 }
 
                 // color data points red
-                DataPoint last = pingSeries.Points.Last();
+                DataPoint last = pingSeries.Points.Last(); // most recent data point
                 last.MarkerStyle = MarkerStyle.Square;
                 last.MarkerColor = Color.Red;
             }
             else
             {
                 pingSeries.Points.AddXY(dates.Last(), pings.Last());
-                //pingSeries.Color = Color.Lime;
+                DataPoint last = pingSeries.Points.Last(); // most recent data point
+
+                // color code the data points
+                if (ping <= 200 && ping != -1)
+                    last.Color = Color.Lime;
+                if (ping > 200 && ping <= 500)
+                    last.Color = Color.Yellow;
+                else if (ping > 500)
+                    last.Color = Color.Red;
             }
 
             while (pingSeries.Points.Count > nDataPts)
