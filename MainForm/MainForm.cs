@@ -8,13 +8,20 @@ using System.Text;
 using System.Windows.Forms;
 using TraceRoute;
 using System.Threading;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MainForm
 {
     public partial class MainForm : Form
     {
         private string hostOrIp;
-        List<List<Hop>> allRoutes = new List<List<Hop>>();
+        private BindingList<long> pings = new BindingList<long>();
+        private Axis axisX;
+        private Axis axisY;
+        private Series pingSeries;
+        private List<DateTime> dates = new List<DateTime>();
+        private int nTraces;
+        private double traceInterval;
 
         public MainForm()
         {
@@ -32,7 +39,15 @@ namespace MainForm
             // start traceroute if not already running, otherwise kill it.
             if (!tracertBackgroundWorker.IsBusy)
             {
+                // save user input here
                 hostOrIp = addrComboBox.Text;
+                nTraces = (int)nTraceUpDown.Value;
+                traceInterval = (double)traceIntUpDown.Value;
+
+                // clear the plot if it has data
+                chartPings.Series[0].Points.Clear();
+
+                // start the traceroute in a separate thread
                 tracertBackgroundWorker.RunWorkerAsync();
                 traceBtn.Text = "Stop";
             }
@@ -51,13 +66,12 @@ namespace MainForm
         private void tracertBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            int n = (int) nTraceUpDown.Value;
-            if (n == 0) n = Int32.MaxValue; // 0 means loop forever
+            if (nTraces == 0) nTraces = Int32.MaxValue; // 0 means loop forever
 
             // get sleep time and convert sec to ms
             int tsleep = (int)(1000*traceIntUpDown.Value);
 
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < nTraces; i++)
             {
                 if (worker.CancellationPending)
                 {
@@ -76,8 +90,39 @@ namespace MainForm
             int i = e.ProgressPercentage;
             List<Hop> hops = (List<Hop>)e.UserState;
             drawTable(hops, i);
-            allRoutes.Add(hops);
-            totPingLbl.Text = hops[hops.Count-1].time.ToString() + " ms";
+            totPingLbl.Text = hops.Last().time.ToString() + " ms";
+            updateChart(hops.Last());
+        }
+
+        private void updateChart(Hop hop)
+        {
+            int nDataPts = 200;
+            int nGridPts = 8;
+            int dx = nDataPts / nGridPts;
+
+            // get reference to axes and series - these will come in handy
+            axisX = chartPings.ChartAreas[0].AxisX;
+            axisY = chartPings.ChartAreas[0].AxisY;
+            pingSeries = chartPings.Series[0];
+
+            axisX.LabelStyle.Interval = dx * traceInterval;
+            axisX.MajorGrid.Interval = dx * traceInterval;
+            axisX.Minimum = DateTime.Now.Subtract(new TimeSpan(0, 0, (int)(traceInterval * nDataPts))).ToOADate();
+            axisX.Maximum = DateTime.Now.ToOADate();
+
+            // add current data point
+            dates.Add(DateTime.Now);
+            pings.Add(hop.time);
+            pingSeries.Points.AddXY(dates.Last(), pings.Last());
+
+            while (pingSeries.Points.Count > nDataPts)
+                pingSeries.Points.RemoveAt(0);
+
+            if (pingSeries.Points.Count == nDataPts)
+            {
+                axisX.Minimum = pingSeries.Points[0].XValue;
+                axisX.Maximum = pingSeries.Points.Last().XValue;
+            }
         }
 
         private void drawTable(List<Hop> hops, int i = 1)
@@ -140,6 +185,11 @@ namespace MainForm
         private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             traceBtn.Text = "Trace";
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
