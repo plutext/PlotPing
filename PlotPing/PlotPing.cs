@@ -10,9 +10,9 @@ using TraceRoute;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MainForm
+namespace PlotPing
 {
-    public partial class MainForm : Form
+    public partial class PlotPing : Form
     {
         private List<DateTime> dates = new List<DateTime>();
         private BindingList<long> pings = new BindingList<long>();
@@ -24,8 +24,10 @@ namespace MainForm
         private double traceInterval;
         private DateTime tStart;
         private DateTime tEnd;
+        private int nDataPts = 200;
+        private int nGridPts = 8;
 
-        public MainForm()
+        public PlotPing()
         {
             InitializeComponent();
             traceIntUpDown.Maximum = Decimal.MaxValue;
@@ -64,15 +66,11 @@ namespace MainForm
             else if (tracertBackgroundWorker.IsBusy)
             {
                 tracertBackgroundWorker.CancelAsync();
-                traceBtn.Text = "Trace";
+                traceBtn.Text = "Stopping...";
             }
         }
 
-        /// <summary>
-        /// Runs a traceroute in a separate thread
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        // Runs a traceroute in a separate thread
         private void tracertBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -94,6 +92,7 @@ namespace MainForm
             }
         }
 
+        // updates the program for each completed ping (a full traceroute).
         private void tracertBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
@@ -128,6 +127,7 @@ namespace MainForm
             lblEndTime.Text = tEnd.ToString();
         }
 
+        // done pinging
         private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             traceBtn.Text = "Trace";
@@ -161,11 +161,7 @@ namespace MainForm
                 routeListView.Items.Add(item);
             }
             
-            // removes horizontal scroll bar
-            if (hops.Count > 12)
-                routeListView.Columns[3].Width = 96 - 25;
-            else
-                routeListView.Columns[3].Width = -2;
+            hideHScrollBar();
         }
 
         // redraws the trace route table
@@ -200,8 +196,13 @@ namespace MainForm
                 }
             }
 
-            // removes horizontal scroll bar
-            if (hops.Count > 12)
+            hideHScrollBar();
+        }
+
+        // hides the horizontal scroll bar on the traceroute table (routeListView)
+        private void hideHScrollBar()
+        {
+            if (routeListView.Items.Count > 12)
                 routeListView.Columns[3].Width = 96 - 25;   // 96 is width of the last column, 25 is the width of the scrollbar.
             else
                 routeListView.Columns[3].Width = -2;
@@ -210,23 +211,22 @@ namespace MainForm
         // initializes the plot of ping vs time.
         private void initChart()
         {
+            int dx = nDataPts / nGridPts;   // grid spacing
             chartPings.Visible = true;
-            int nDataPts = 200;
-            int nGridPts = 8;
-            int dx = nDataPts / nGridPts;
+
+            // get reference to plot axes
             axisX = chartPings.ChartAreas[0].AxisX;
             axisY = chartPings.ChartAreas[0].AxisY;
+
+            // establish the grid and labels
             axisX.LabelStyle.Interval = dx * traceInterval;
             axisX.MajorGrid.Interval = dx * traceInterval;
             axisX.MajorTickMark.Interval = dx * traceInterval;
         }
 
+        // updates the plot of ping vs time after it has been created
         private void updateChart(long ping)
         {
-            int nDataPts = 200;
-            int nGridPts = 8;
-            int dx = nDataPts / nGridPts;
-
             // get reference to axes and series - these will come in handy
             axisX = chartPings.ChartAreas[0].AxisX;
             axisY = chartPings.ChartAreas[0].AxisY;
@@ -245,15 +245,11 @@ namespace MainForm
 
                 // first ping is a timeout
                 if (pings.Count == 1)
-                {
                     pingSeries.Points.AddXY(dates.Last(), -1);
-                }
                 else
-                {
                     pingSeries.Points.AddXY(dates.Last(), pingSeries.Points.Last().YValues[0]);
-                }
 
-                // color data points red
+                // color data points red for timeout
                 DataPoint last = pingSeries.Points.Last(); // most recent data point
                 last.MarkerStyle = MarkerStyle.Square;
                 last.MarkerColor = Color.Red;
@@ -272,11 +268,9 @@ namespace MainForm
                     last.Color = Color.Red;
             }
 
+            // show at most nDataPts
             while (pingSeries.Points.Count > nDataPts)
-            {
                 pingSeries.Points.RemoveAt(0);
-                //timeOutSeries.Points.RemoveAt(0);
-            }
 
             if (pingSeries.Points.Count == nDataPts)
             {

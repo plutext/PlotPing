@@ -1,6 +1,6 @@
-﻿namespace MainForm
+﻿namespace PlotPing
 {
-    partial class MainForm
+    partial class PlotPing
     {
         /// <summary>
         /// Required designer variable.

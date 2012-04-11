@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraceRoute", "TraceRoute\TraceRoute.csproj", "{448BC198-B591-4F03-8E87-89F06E292123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainForm", "MainForm\MainForm.csproj", "{5229B424-22E4-4BDF-B2B0-95E948B9D78A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTrace", "TestTrace\TestTrace.csproj", "{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlotPing", "PlotPing\PlotPing.csproj", "{5229B424-22E4-4BDF-B2B0-95E948B9D78A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,16 +35,6 @@ Global
 		{5229B424-22E4-4BDF-B2B0-95E948B9D78A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{5229B424-22E4-4BDF-B2B0-95E948B9D78A}.Release|x86.ActiveCfg = Release|x86
 		{5229B424-22E4-4BDF-B2B0-95E948B9D78A}.Release|x86.Build.0 = Release|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Debug|x86.ActiveCfg = Debug|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Debug|x86.Build.0 = Debug|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Release|Any CPU.ActiveCfg = Release|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Release|x86.ActiveCfg = Release|x86
-		{7BC8C603-5A5A-4B44-8F1D-37CB1D86086D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

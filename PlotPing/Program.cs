@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MainForm
+namespace PlotPing
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace MainForm
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new PlotPing());
         }
     }
 }
