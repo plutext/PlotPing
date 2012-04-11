@@ -40,7 +40,9 @@ namespace TraceRoute
                 }
                 catch (PingException e)
                 {
-                    throw (e);
+                    hops.Add(new Hop(i, "Request timed out", -1, true));
+                    break;
+                    //throw (e);
                 }
                 watch.Stop();
 

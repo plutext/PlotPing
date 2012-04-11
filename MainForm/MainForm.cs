@@ -46,6 +46,7 @@ namespace MainForm
 
                 // clear the plot if it has data
                 chartPings.Series[0].Points.Clear();
+                initChart();
 
                 // start the traceroute in a separate thread
                 tracertBackgroundWorker.RunWorkerAsync();
@@ -91,10 +92,22 @@ namespace MainForm
             List<Hop> hops = (List<Hop>)e.UserState;
             drawTable(hops, i);
             totPingLbl.Text = hops.Last().time.ToString() + " ms";
-            updateChart(hops.Last());
+            updateChart(hops.Last().time);
         }
 
-        private void updateChart(Hop hop)
+        private void initChart()
+        {
+            int nDataPts = 200;
+            int nGridPts = 8;
+            int dx = nDataPts / nGridPts;
+            axisX = chartPings.ChartAreas[0].AxisX;
+            axisY = chartPings.ChartAreas[0].AxisY;
+            axisX.LabelStyle.Interval = dx * traceInterval;
+            axisX.MajorGrid.Interval = dx * traceInterval;
+            axisX.MajorTickMark.Interval = dx * traceInterval;
+        }
+
+        private void updateChart(long ping)
         {
             int nDataPts = 200;
             int nGridPts = 8;
@@ -104,16 +117,23 @@ namespace MainForm
             axisX = chartPings.ChartAreas[0].AxisX;
             axisY = chartPings.ChartAreas[0].AxisY;
             pingSeries = chartPings.Series[0];
+            Series timeOutSeries = chartPings.Series[1];
 
-            axisX.LabelStyle.Interval = dx * traceInterval;
-            axisX.MajorGrid.Interval = dx * traceInterval;
             axisX.Minimum = DateTime.Now.Subtract(new TimeSpan(0, 0, (int)(traceInterval * nDataPts))).ToOADate();
             axisX.Maximum = DateTime.Now.ToOADate();
 
             // add current data point
             dates.Add(DateTime.Now);
-            pings.Add(hop.time);
-            pingSeries.Points.AddXY(dates.Last(), pings.Last());
+            pings.Add(ping);
+
+            // plot red for timeouts
+            if (ping == -1)
+            {
+                pingSeries.Points.AddXY(dates.Last(), pingSeries.Points.Last().YValues[0]);
+                timeOutSeries.Points.AddXY(dates.Last(), pingSeries.Points.Last().YValues[0]);
+            }
+            else
+                pingSeries.Points.AddXY(dates.Last(), pings.Last());
 
             while (pingSeries.Points.Count > nDataPts)
                 pingSeries.Points.RemoveAt(0);
