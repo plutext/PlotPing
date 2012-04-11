@@ -28,6 +28,7 @@ namespace MainForm
             InitializeComponent();
             traceIntUpDown.Maximum = Decimal.MaxValue;
             nTraceUpDown.Maximum = Decimal.MaxValue;
+            chartPings.Visible = false;
         }
 
         private void traceBtn_Click(object sender, EventArgs e)
@@ -95,8 +96,10 @@ namespace MainForm
             updateChart(hops.Last().time);
         }
 
+        // initializes the plot of ping vs time.
         private void initChart()
         {
+            chartPings.Visible = true;
             int nDataPts = 200;
             int nGridPts = 8;
             int dx = nDataPts / nGridPts;
