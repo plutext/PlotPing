@@ -47,6 +47,7 @@
             this.roundTripLbl = new System.Windows.Forms.Label();
             this.totPingLbl = new System.Windows.Forms.Label();
             this.chartPings = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.traceIntUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPings)).BeginInit();
@@ -164,10 +165,15 @@
             65536});
             this.traceIntUpDown.Location = new System.Drawing.Point(315, 36);
             this.traceIntUpDown.Maximum = new decimal(new int[] {
-            1000,
+            86400,
             0,
             0,
             0});
+            this.traceIntUpDown.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.traceIntUpDown.Name = "traceIntUpDown";
             this.traceIntUpDown.Size = new System.Drawing.Size(77, 20);
             this.traceIntUpDown.TabIndex = 14;
@@ -230,7 +236,7 @@
             chartArea1.InnerPlotPosition.Y = 2F;
             chartArea1.Name = "ChartArea1";
             this.chartPings.ChartAreas.Add(chartArea1);
-            this.chartPings.Location = new System.Drawing.Point(398, 61);
+            this.chartPings.Location = new System.Drawing.Point(398, 35);
             this.chartPings.Name = "chartPings";
             series1.BorderWidth = 2;
             series1.ChartArea = "ChartArea1";
@@ -241,16 +247,25 @@
             series1.Points.Add(dataPoint1);
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             this.chartPings.Series.Add(series1);
-            this.chartPings.Size = new System.Drawing.Size(627, 248);
+            this.chartPings.Size = new System.Drawing.Size(627, 325);
             this.chartPings.TabIndex = 17;
             this.chartPings.Text = "chart1";
-            this.chartPings.Click += new System.EventHandler(this.chart1_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 316);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(109, 10);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 18;
+            this.progressBar1.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1037, 349);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.chartPings);
             this.Controls.Add(this.totPingLbl);
             this.Controls.Add(this.roundTripLbl);
@@ -291,6 +306,7 @@
         private System.Windows.Forms.Label roundTripLbl;
         private System.Windows.Forms.Label totPingLbl;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPings;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

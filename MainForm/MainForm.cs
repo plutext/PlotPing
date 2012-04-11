@@ -46,8 +46,9 @@ namespace MainForm
                 traceInterval = (double)traceIntUpDown.Value;
 
                 // start the traceroute in a separate thread
-                tracertBackgroundWorker.RunWorkerAsync();
                 traceBtn.Text = "Stop";
+                tracertBackgroundWorker.RunWorkerAsync();
+                progressBar1.Visible = true;
             }
             else if (tracertBackgroundWorker.IsBusy)
             {
@@ -112,6 +113,13 @@ namespace MainForm
             updateChart(hops.Last().time);
         }
 
+        private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            traceBtn.Text = "Trace";
+            progressBar1.Visible = false;
+        }
+
+        // initializes the traceroute table
         private void initTable(List<Hop> hops)
         {
             routeListView.Items.Clear();
@@ -126,9 +134,9 @@ namespace MainForm
                 item.SubItems.Add(hop.time.ToString());
 
                 // color code pings 
-                if (hop.time < 100 && hop.time >= 0)
+                if (hop.time <= 200 && hop.time >= 0)
                     item.SubItems[3].BackColor = Color.Lime;
-                else if (hop.time > 100 && hop.time < 200)
+                else if (hop.time > 200 && hop.time <= 500)
                     item.SubItems[3].BackColor = Color.Yellow;
                 else
                     item.SubItems[3].BackColor = Color.Red;
@@ -143,7 +151,7 @@ namespace MainForm
                 routeListView.Columns[3].Width = -2;
         }
 
-        // 
+        // redraws the trace route table
         private void drawTable(List<Hop> hops)
         {   
             if(hops.Count != routeListView.Items.Count)
@@ -166,11 +174,11 @@ namespace MainForm
 
                     // color code pings 
                     Color bg = curItem.SubItems[3].BackColor;
-                    if (curHop.time < 100 && curHop.time != -1 && bg != Color.Lime)
+                    if (curHop.time <= 200 && curHop.time != -1 && bg != Color.Lime)
                         curItem.SubItems[3].BackColor = Color.Lime;
-                    else if (curHop.time > 100 && curHop.time < 200 && bg != Color.Yellow)
+                    else if (curHop.time > 200 && curHop.time <= 500 && bg != Color.Yellow)
                         curItem.SubItems[3].BackColor = Color.Yellow;
-                    else if (curHop.time > 200 || curHop.time == -1 && bg != Color.Red)
+                    else if (curHop.time > 500 || curHop.time == -1 && bg != Color.Red)
                         curItem.SubItems[3].BackColor = Color.Red;
                 }
             }
@@ -250,16 +258,6 @@ namespace MainForm
                 axisX.Minimum = pingSeries.Points[0].XValue;
                 axisX.Maximum = pingSeries.Points.Last().XValue;
             }
-        }
-
-        private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            traceBtn.Text = "Trace";
-        }
-
-        private void chart1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
