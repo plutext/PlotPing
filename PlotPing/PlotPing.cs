@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using TraceRoute;
 using System.Threading;
+using System.Net;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PlotPing
@@ -24,7 +25,7 @@ namespace PlotPing
         private double traceInterval;
         private DateTime tStart;
         private DateTime tEnd;
-        private int nDataPts = 200;
+        private int nDataPts = 240;
         private int nGridPts = 8;
 
         public PlotPing()
@@ -67,6 +68,7 @@ namespace PlotPing
             {
                 tracertBackgroundWorker.CancelAsync();
                 traceBtn.Text = "Stopping...";
+                traceBtn.Enabled = false;
             }
         }
 
@@ -131,6 +133,7 @@ namespace PlotPing
         private void tracertBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             traceBtn.Text = "Trace";
+            traceBtn.Enabled = true;
             progressBar1.Visible = false;
             tEnd = DateTime.Now;
             lblEndTime.Text = tEnd.ToString();
@@ -146,17 +149,16 @@ namespace PlotPing
                 item.UseItemStyleForSubItems = false;   // set to false, otherwise items don't appear
 
                 item.Text = hop.hopNum.ToString();
-                item.SubItems.Add(hop.ip.ToString());
-                item.SubItems.Add("-----");
+                item.SubItems.Add(hop.ip);
                 item.SubItems.Add(hop.time.ToString());
 
                 // color code pings 
                 if (hop.time <= 200 && hop.time >= 0)
-                    item.SubItems[3].BackColor = Color.Lime;
+                    item.SubItems[2].BackColor = Color.Lime;
                 else if (hop.time > 200 && hop.time <= 500)
-                    item.SubItems[3].BackColor = Color.Yellow;
+                    item.SubItems[2].BackColor = Color.Yellow;
                 else
-                    item.SubItems[3].BackColor = Color.Red;
+                    item.SubItems[2].BackColor = Color.Red;
 
                 routeListView.Items.Add(item);
             }
@@ -179,20 +181,22 @@ namespace PlotPing
 
                     // if prev ip != cur ip
                     if (curItem.SubItems[1].Text != curHop.ip.ToString())
+                    {
                         curItem.SubItems[1].Text = curHop.ip.ToString();
+                    }
 
                     // if prev time != cur time
-                    if (curItem.SubItems[3].Text != curHop.time.ToString())
-                        curItem.SubItems[3].Text = curHop.time.ToString();
+                    if (curItem.SubItems[2].Text != curHop.time.ToString())
+                        curItem.SubItems[2].Text = curHop.time.ToString();
 
                     // color code pings 
-                    Color bg = curItem.SubItems[3].BackColor;
+                    Color bg = curItem.SubItems[2].BackColor;
                     if (curHop.time <= 200 && curHop.time != -1 && bg != Color.Lime)
-                        curItem.SubItems[3].BackColor = Color.Lime;
+                        curItem.SubItems[2].BackColor = Color.Lime;
                     else if (curHop.time > 200 && curHop.time <= 500 && bg != Color.Yellow)
-                        curItem.SubItems[3].BackColor = Color.Yellow;
+                        curItem.SubItems[2].BackColor = Color.Yellow;
                     else if (curHop.time > 500 || curHop.time == -1 && bg != Color.Red)
-                        curItem.SubItems[3].BackColor = Color.Red;
+                        curItem.SubItems[2].BackColor = Color.Red;
                 }
             }
 
@@ -203,9 +207,11 @@ namespace PlotPing
         private void hideHScrollBar()
         {
             if (routeListView.Items.Count > 12)
-                routeListView.Columns[3].Width = 96 - 25;   // 96 is width of the last column, 25 is the width of the scrollbar.
+            {
+                routeListView.Columns[2].Width = 77 - 17;   // 96 is width of the last column, 25 is the width of the scrollbar.
+            }
             else
-                routeListView.Columns[3].Width = -2;
+                routeListView.Columns[2].Width = -2;
         }
 
         // initializes the plot of ping vs time.
@@ -222,6 +228,15 @@ namespace PlotPing
             axisX.LabelStyle.Interval = dx * traceInterval;
             axisX.MajorGrid.Interval = dx * traceInterval;
             axisX.MajorTickMark.Interval = dx * traceInterval;
+
+            //updateYAxis();
+        }
+
+        private void updateYAxis()
+        {
+            axisY.LabelStyle.Interval = Math.Floor((axisY.Maximum - axisY.Minimum) / 6);
+            axisY.MajorGrid.Interval = Math.Floor((axisY.Maximum - axisY.Minimum) / 6);
+            axisY.MajorTickMark.Interval = Math.Floor((axisY.Maximum - axisY.Minimum) / 6);
         }
 
         // updates the plot of ping vs time after it has been created
@@ -231,6 +246,8 @@ namespace PlotPing
             axisX = chartPings.ChartAreas[0].AxisX;
             axisY = chartPings.ChartAreas[0].AxisY;
             pingSeries = chartPings.Series[0];
+
+            updateYAxis();
 
             axisX.Minimum = DateTime.Now.Subtract(new TimeSpan(0, 0, (int)(traceInterval * nDataPts))).ToOADate();
             axisX.Maximum = DateTime.Now.ToOADate();
