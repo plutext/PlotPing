@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MainForm")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("PlotPing")]
+[assembly: AssemblyDescription("An open source Windows app to graphically view your latency to any internet network.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MainForm")]
+[assembly: AssemblyCompany("Chris Campo")]
+[assembly: AssemblyProduct("PlotPing")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

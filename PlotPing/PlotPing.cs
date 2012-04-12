@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using TraceRoute;
 using System.Threading;
 using System.Net;
+using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PlotPing
@@ -294,6 +295,58 @@ namespace PlotPing
                 axisX.Minimum = pingSeries.Points[0].XValue;
                 axisX.Maximum = pingSeries.Points.Last().XValue;
             }
+        }
+
+        // close the program
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // export the data
+        private void exportDataFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // no data present
+            if (pings.Count == 0 || dates.Count == 0)
+            {
+                MessageBox.Show("No data availible to export!", "Error!");
+                return;
+            }
+
+            string fileName = "";
+            saveFileDialog1.Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt";
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.Cancel)
+            {
+                fileName = saveFileDialog1.FileName;
+                try
+                {
+                    saveCSV(fileName);
+                }
+                catch(IOException ioErr)
+                {
+                    MessageBox.Show(ioErr.Message, "Error");
+                }
+            }
+        }
+
+        // saves the ping vs time series data to a csv file
+        private void saveCSV(string filename)
+        {
+            TextWriter tw = new StreamWriter(filename);
+            tw.WriteLine("yyyy, MM, dd, HH, mm, ss, ping");
+            for (int i = 0; i < pings.Count; i++)
+            {
+                string line = dates[i].ToString("yyyy, MM, dd, HH, mm, ss") + "," + pings[i].ToString();
+                tw.WriteLine(line);
+            }
+            tw.Close();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AboutBox about = new AboutBox();
+            about.Show();
         }
     }
 }
