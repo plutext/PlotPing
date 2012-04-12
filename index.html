@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>PlotPing by ccampo133</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>PlotPing</h1>
+        <p>An open source Windows app to graphically view your latency to any web address as a function of time.</p>
+        <p class="view"><a href="https://github.com/ccampo133/PlotPing">View the Project on GitHub <small>ccampo133/PlotPing</small></a></p>
+        <ul>
+          <li><a href="https://github.com/ccampo133/PlotPing/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ccampo133/PlotPing/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ccampo133/PlotPing">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>PlotPing</h1>
+
+<h4>Author: Chris Campo (<a href="https://github.com/ccampo133" class="user-mention">@ccampo133</a>)</h4>
+
+<h4>2012</h4>
+
+<h2>Description</h2>
+
+<p>PlotPing is an open-source, network diagnostic tool that allows you to view your latency to some web address as a function of time.  It works by periodically pinging a user-decided URL or IP address, and logging the latency and send time of each echo request.  It also executes a trace-route in the pinging process, and displays the IP address of each intermediate router traversed during the ping.  The round-trip latencies are then plotted as a function of the times they were sent, and the graph is continuously updated.  The graph is color coded, with low latency pings displayed as green, mid latency pings as yellow, and high latency pings as red.  The application also allows you to save the data to a comma-separated-value file (.CSV) or a simple text file, for archival purposes.</p>
+
+<p>If a network timeout occurs while the program is running, the graph will display red boxes as data points and the pings will be logged as -1, if you decide to save your data.</p>
+
+<h2>Installation and Execution</h2>
+
+<p>PlotPing requires no installation if you are using the binary version.  Simply download the self-extracting executable from PlotPing's <a href="https://github.com/ccampo133/PlotPing/downloads">download section</a> here on GitHub, and then run PlotPing.exe.  You must have the .NET 4.0 framework installed on your system for it to work.</p>
+
+<p>If you want to build PlotPing from the source, you can either fork the PlotPing repo from me on GitHub or download the source as a zip file, and then build it using Visual Studio 2010.</p>
+
+<h2>Motivation and Shout-Outs</h2>
+
+<p>PlotPing is useful for diagnosing network issues such as frequent disconnects or timeouts, as it allows you to see exactly when and where the timeouts occur.  Since the data is continuously logged, it can provide hard evidence to your ISP that your network is disconnecting (this was the main motivation for me to write this software).</p>
+
+<p>It is also somewhat of a shameless, less-robust rip-off of <a href="http://www.nessoft.com/">Nessoft's</a> <a href="http://www.pingplotter.com/">PingPlotter software</a>, so if you want something more sophisticated and of commercial calibre, please check out their software.  Check it out even if you are happy with my code!</p>
+
+<p>Finally, if you are in the mood for a platform independent, much less robust but much more lightweight solution to PlotPing, check out my Python implementation of the same code, creatively named <a href="https://github.com/ccampo133/PingPlot">PingPlot</a>, here on GitHub.</p>
+
+<h2>Support and Other Ramblings</h2>
+
+<p>Please make sure you have the .NET 4.0 framework installed on your system if you are having trouble running PlotPing.  If you have any problems, need any help, or better yet, find bugs, please email me at ccampo.progs@gmail.com, or contact me via GitHub (<a href="https://github.com/ccampo133" class="user-mention">@ccampo133</a>).  Alternatively you can submit any issues you encounter on <a href="https://github.com/ccampo133/PlotPing/issues">PlotPing's issues page</a>, right here on GitHub.</p>
+
+<p>Also, this is literally my first ever project written for strictly for Windows using WinForms, and it is also my first time writing in C#.  I appologize if the code is a bit rough around the edges.  I will clean it up as I go on.  I also highly encourage anybody who looks at the code or uses the program to give me feedback, as it is invaluable to me.</p>
+
+<p>Cheers, and happy pinging!  </p>
+
+<h2>Screenshots</h2>
+
+<p><img src="http://i.imgur.com/jdzbP.png" alt=""></p>
+
+<p><img src="http://i.imgur.com/rj6Hw.png" alt=""></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ccampo133">ccampo133</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30743269-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
