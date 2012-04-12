@@ -1,4 +1,4 @@
-# PingPlot
+# PlotPing
 #### Author: Chris Campo (@ccampo133)
 #### 2012
 
