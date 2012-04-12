@@ -53,6 +53,10 @@ namespace PlotPing
                 tStart = DateTime.Now;
                 tEnd = DateTime.Now;
 
+                // clear any previously logged data
+                dates.Clear();
+                pings.Clear();
+
                 // start the traceroute in a separate thread
                 tracertBackgroundWorker.RunWorkerAsync();
                 
@@ -229,10 +233,9 @@ namespace PlotPing
             axisX.LabelStyle.Interval = dx * traceInterval;
             axisX.MajorGrid.Interval = dx * traceInterval;
             axisX.MajorTickMark.Interval = dx * traceInterval;
-
-            //updateYAxis();
         }
 
+        // sets up the proper labels and tick marks
         private void updateYAxis()
         {
             axisY.LabelStyle.Interval = Math.Floor((axisY.Maximum - axisY.Minimum) / 6);
@@ -334,6 +337,7 @@ namespace PlotPing
         private void saveCSV(string filename)
         {
             TextWriter tw = new StreamWriter(filename);
+            tw.WriteLine(hostOrIp);
             tw.WriteLine("yyyy, MM, dd, HH, mm, ss, ping");
             for (int i = 0; i < pings.Count; i++)
             {
@@ -347,6 +351,11 @@ namespace PlotPing
         {
             AboutBox about = new AboutBox();
             about.Show();
+        }
+
+        private void nTraceLbl_MouseHover(object sender, EventArgs e)
+        {
+            toolTipHover.Show("0 is unlimited", nTraceLbl);
         }
     }
 }
