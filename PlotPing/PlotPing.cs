@@ -357,5 +357,45 @@ namespace PlotPing
         {
             toolTipHover.Show("0 is unlimited", nTraceLbl);
         }
+
+        /// <summary>
+        /// Saves the chart as either a PNG, JPEG or GIF file as whatever
+        /// the user specifies the name to be
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportChartMenuItem_Click(object sender, EventArgs e)
+        {
+            // no data present
+            if (pings.Count == 0 || dates.Count == 0)
+            {
+                MessageBox.Show("No data availible to export!", "Error!");
+                return;
+            }
+
+            string fileName = "";
+            saveFileDialog1.Filter = "PNG Files (*.png)|*.png|JPG Files (*.jpeg)|*.jpeg|GIF Files (*.gif)|*.gif";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog1.FileName;
+
+                    // default formatting to PNG
+                    ChartImageFormat fmt = ChartImageFormat.Png;
+                    if (fileName.Contains(".png"))
+                    {
+                        fmt = ChartImageFormat.Png;
+                    }
+                    else if (fileName.Contains(".jpeg"))
+                    {
+                        fmt = ChartImageFormat.Jpeg;
+                    }
+                    else if (fileName.Contains(".gif"))
+                    {
+                        fmt = ChartImageFormat.Gif;
+                    }
+                    chartPings.SaveImage(fileName, fmt);
+            }
+        }
     }
 }

@@ -92,6 +92,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.toolTipHover = new System.Windows.Forms.ToolTip(this.components);
+            this.exportChartMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.traceIntUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPings)).BeginInit();
@@ -560,6 +561,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportDataFileToolStripMenuItem,
+            this.exportChartMenuItem,
             this.toolStripSeparator6,
             this.exitToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -570,19 +572,19 @@
             // exportDataFileToolStripMenuItem
             // 
             this.exportDataFileToolStripMenuItem.Name = "exportDataFileToolStripMenuItem";
-            this.exportDataFileToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.exportDataFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.exportDataFileToolStripMenuItem.Text = "Export data to file...";
             this.exportDataFileToolStripMenuItem.Click += new System.EventHandler(this.exportDataFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(188, 6);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
             this.exitToolStripMenuItem1.Text = "E&xit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
@@ -614,6 +616,13 @@
             this.menuStrip1.Size = new System.Drawing.Size(874, 24);
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // exportChartMenuItem
+            // 
+            this.exportChartMenuItem.Name = "exportChartMenuItem";
+            this.exportChartMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exportChartMenuItem.Text = "Export chart to file...";
+            this.exportChartMenuItem.Click += new System.EventHandler(this.exportChartMenuItem_Click);
             // 
             // PlotPing
             // 
@@ -716,6 +725,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolTip toolTipHover;
+        private System.Windows.Forms.ToolStripMenuItem exportChartMenuItem;
     }
 }
 
