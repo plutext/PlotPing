@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlotPing.Properties
+namespace PlotPingWinFormsGUI.Properties
 {
 
 

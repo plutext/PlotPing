@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PlotPing")]
+[assembly: AssemblyTitle("PlotPingWinFormsGUI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PlotPing")]
+[assembly: AssemblyProduct("PlotPingWinFormsGUI")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("74dc5357-12a6-4565-bd24-dc1e98e9a1ba")]
+[assembly: Guid("7904790b-04db-4888-a0be-5d88768547ab")]
 
 // Version information for an assembly consists of the following four values:
 //
