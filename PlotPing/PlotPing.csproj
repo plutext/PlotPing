@@ -51,6 +51,9 @@
   <PropertyGroup>
     <ApplicationIcon>icon_PlotPing.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>PlotPing.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,6 +74,7 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="NetworkInterfaceUtils.cs" />
     <Compile Include="PlotPing.cs">
       <SubType>Form</SubType>
     </Compile>

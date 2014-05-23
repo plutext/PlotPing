@@ -11,6 +11,7 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Net.NetworkInformation;
 
 namespace PlotPing
 {
@@ -29,12 +30,97 @@ namespace PlotPing
         private int nDataPts = 240;
         private int nGridPts = 8;
 
+        private NetworkInterface[] networkInterfaces;
+        private NetworkInterface networkInterface;
+
+        private string routeToDestination;
+
         public PlotPing()
         {
             InitializeComponent();
             traceIntUpDown.Maximum = Decimal.MaxValue;
             nTraceUpDown.Maximum = Decimal.MaxValue;
             chartPings.Visible = false;
+
+            // Populate available interfaces
+            networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface adapter in networkInterfaces)
+            {
+                listBoxNetworkInterface.Items.Add(interfaceLabel(adapter));
+            }
+
+            listBoxNetworkInterface.MouseMove += new MouseEventHandler(listBox1_MouseMove);
+
+        }
+
+
+
+        void listBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Adapted from http://www.codeproject.com/Articles/32124/Showing-a-Separate-Tooltip-for-Each-Item-in-a-List
+            // License is http://www.codeproject.com/info/cpol10.aspx
+
+                try
+                {
+                    ListBox objListBox = (ListBox)sender;
+                    int itemIndex = -1;
+                    if (objListBox.ItemHeight != 0)
+                    {
+                        itemIndex = e.Y / objListBox.ItemHeight;
+                        itemIndex += objListBox.TopIndex;
+                    }
+                    if ((itemIndex >= 0 && itemIndex!=lastIndex))
+                    {
+                        toolTipNetworkInterface.SetToolTip(objListBox,
+                            interfaceTooltip(networkInterfaces[itemIndex]));
+                        lastIndex = itemIndex;
+                    }
+                    else
+                    {
+                        toolTipNetworkInterface.Hide(objListBox);
+                        lastIndex = -1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+        }
+        private int lastIndex = -1;
+
+
+        private string interfaceTooltip(NetworkInterface adapter)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!adapter.OperationalStatus.Equals(OperationalStatus.Up))
+            {
+                sb.AppendLine("** Status " + adapter.OperationalStatus + " **");
+            }
+            sb.AppendLine("Name\t\t: " + adapter.Name);
+            sb.AppendLine("Type\t\t: " + adapter.NetworkInterfaceType);
+            sb.AppendLine("Description\t: " + adapter.Description);
+            UnicastIPAddressInformationCollection unicastIPC = adapter.GetIPProperties().UnicastAddresses;
+            foreach (UnicastIPAddressInformation unicast in unicastIPC)
+            {
+                sb.AppendLine(unicast.Address.AddressFamily + "\t: " + unicast.Address);
+            }           
+            return sb.ToString();
+        }
+
+        private string interfaceLabel(NetworkInterface adapter)
+        {
+            // Various options here; this'll do, since we show the rest in the tooltip
+            return adapter.Description;
+        }
+
+        private NetworkInterface getInterface(string label)
+        {
+            foreach (NetworkInterface adapter in networkInterfaces)
+            {
+                // TODO filter out irrelevant ones
+                if (interfaceLabel(adapter).Equals(label)) return adapter;
+            }
+            return null;
         }
 
         private void traceBtn_Click(object sender, EventArgs e)
@@ -52,6 +138,12 @@ namespace PlotPing
                 traceInterval = (double)traceIntUpDown.Value;
                 tStart = DateTime.Now;
                 tEnd = DateTime.Now;
+                networkInterface = getInterface((string)listBoxNetworkInterface.SelectedItem);
+                if (networkInterface != null)
+                {
+                    // set the route
+                    routeToDestination = NetworkInterfaceUtils.AddRoute(networkInterface, hostOrIp);
+                }
 
                 // clear any previously logged data
                 dates.Clear();
@@ -74,6 +166,12 @@ namespace PlotPing
                 tracertBackgroundWorker.CancelAsync();
                 traceBtn.Text = "Stopping...";
                 traceBtn.Enabled = false;
+
+                // Delete the route
+                if (routeToDestination != null)
+                {
+                    NetworkInterfaceUtils.RemoveRoute(routeToDestination);
+                }
             }
         }
 
@@ -338,6 +436,12 @@ namespace PlotPing
         {
             TextWriter tw = new StreamWriter(filename);
             tw.WriteLine(hostOrIp);
+            if (networkInterface != null)
+            {
+                tw.WriteLine(interfaceTooltip(networkInterface));
+            }
+            tw.WriteLine(this.textBoxUserNotes);
+
             tw.WriteLine("yyyy, MM, dd, HH, mm, ss, ping");
             for (int i = 0; i < pings.Count; i++)
             {

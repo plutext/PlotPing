@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlotPing));
             this.addrComboBox = new System.Windows.Forms.ComboBox();
             this.routeListView = new System.Windows.Forms.ListView();
@@ -85,6 +85,7 @@
             this.saveDataSetAscsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportDataFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportChartMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +93,10 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.toolTipHover = new System.Windows.Forms.ToolTip(this.components);
-            this.exportChartMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label3 = new System.Windows.Forms.Label();
+            this.listBoxNetworkInterface = new System.Windows.Forms.ListBox();
+            this.toolTipNetworkInterface = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxUserNotes = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.traceIntUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPings)).BeginInit();
@@ -118,7 +122,7 @@
             this.hopCol,
             this.ipCol,
             this.curTimeCol});
-            this.routeListView.Location = new System.Drawing.Point(27, 105);
+            this.routeListView.Location = new System.Drawing.Point(27, 140);
             this.routeListView.Name = "routeListView";
             this.routeListView.Size = new System.Drawing.Size(235, 248);
             this.routeListView.TabIndex = 8;
@@ -144,7 +148,7 @@
             // 
             // traceBtn
             // 
-            this.traceBtn.Location = new System.Drawing.Point(185, 54);
+            this.traceBtn.Location = new System.Drawing.Point(185, 89);
             this.traceBtn.Name = "traceBtn";
             this.traceBtn.Size = new System.Drawing.Size(77, 23);
             this.traceBtn.TabIndex = 7;
@@ -172,7 +176,7 @@
             // nTraceLbl
             // 
             this.nTraceLbl.AutoSize = true;
-            this.nTraceLbl.Location = new System.Drawing.Point(20, 55);
+            this.nTraceLbl.Location = new System.Drawing.Point(20, 90);
             this.nTraceLbl.Name = "nTraceLbl";
             this.nTraceLbl.Size = new System.Drawing.Size(91, 13);
             this.nTraceLbl.TabIndex = 10;
@@ -181,7 +185,7 @@
             // 
             // nTraceUpDown
             // 
-            this.nTraceUpDown.Location = new System.Drawing.Point(117, 53);
+            this.nTraceUpDown.Location = new System.Drawing.Point(117, 88);
             this.nTraceUpDown.Name = "nTraceUpDown";
             this.nTraceUpDown.Size = new System.Drawing.Size(62, 20);
             this.nTraceUpDown.TabIndex = 12;
@@ -189,7 +193,7 @@
             // traceIntLbl
             // 
             this.traceIntLbl.AutoSize = true;
-            this.traceIntLbl.Location = new System.Drawing.Point(10, 81);
+            this.traceIntLbl.Location = new System.Drawing.Point(10, 116);
             this.traceIntLbl.Name = "traceIntLbl";
             this.traceIntLbl.Size = new System.Drawing.Size(101, 13);
             this.traceIntLbl.TabIndex = 13;
@@ -203,7 +207,7 @@
             0,
             0,
             65536});
-            this.traceIntUpDown.Location = new System.Drawing.Point(117, 79);
+            this.traceIntUpDown.Location = new System.Drawing.Point(117, 114);
             this.traceIntUpDown.Maximum = new decimal(new int[] {
             86400,
             0,
@@ -227,7 +231,7 @@
             // 
             this.roundTripLbl.AutoSize = true;
             this.roundTripLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roundTripLbl.Location = new System.Drawing.Point(114, 356);
+            this.roundTripLbl.Location = new System.Drawing.Point(114, 391);
             this.roundTripLbl.Name = "roundTripLbl";
             this.roundTripLbl.Size = new System.Drawing.Size(103, 13);
             this.roundTripLbl.TabIndex = 15;
@@ -237,7 +241,7 @@
             // 
             this.totPingLbl.AutoSize = true;
             this.totPingLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totPingLbl.Location = new System.Drawing.Point(223, 356);
+            this.totPingLbl.Location = new System.Drawing.Point(223, 391);
             this.totPingLbl.Name = "totPingLbl";
             this.totPingLbl.Size = new System.Drawing.Size(30, 13);
             this.totPingLbl.TabIndex = 16;
@@ -248,52 +252,52 @@
             this.chartPings.BackColor = System.Drawing.SystemColors.Control;
             this.chartPings.BackSecondaryColor = System.Drawing.Color.White;
             this.chartPings.BorderlineColor = System.Drawing.Color.Black;
-            chartArea2.AxisX.IsLabelAutoFit = false;
-            chartArea2.AxisX.LabelAutoFitMaxFontSize = 7;
-            chartArea2.AxisX.LabelAutoFitMinFontSize = 7;
-            chartArea2.AxisX.LabelStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            chartArea2.AxisX.LabelStyle.Format = "h:mm:ss";
-            chartArea2.AxisX.LabelStyle.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
-            chartArea2.AxisX.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
-            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.DimGray;
-            chartArea2.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            chartArea2.AxisX.Title = "Time";
-            chartArea2.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            chartArea2.AxisY.IsLabelAutoFit = false;
-            chartArea2.AxisY.LabelAutoFitMaxFontSize = 7;
-            chartArea2.AxisY.LabelAutoFitMinFontSize = 7;
-            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.DimGray;
-            chartArea2.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            chartArea2.AxisY.Title = "Ping (ms)";
-            chartArea2.AxisY.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            chartArea2.AxisY2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 4F);
-            chartArea2.BackColor = System.Drawing.Color.Black;
-            chartArea2.BackSecondaryColor = System.Drawing.Color.White;
-            chartArea2.InnerPlotPosition.Auto = false;
-            chartArea2.InnerPlotPosition.Height = 85F;
-            chartArea2.InnerPlotPosition.Width = 93F;
-            chartArea2.InnerPlotPosition.X = 7F;
-            chartArea2.InnerPlotPosition.Y = 2F;
-            chartArea2.Name = "ChartArea1";
-            this.chartPings.ChartAreas.Add(chartArea2);
+            chartArea1.AxisX.IsLabelAutoFit = false;
+            chartArea1.AxisX.LabelAutoFitMaxFontSize = 7;
+            chartArea1.AxisX.LabelAutoFitMinFontSize = 7;
+            chartArea1.AxisX.LabelStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            chartArea1.AxisX.LabelStyle.Format = "h:mm:ss";
+            chartArea1.AxisX.LabelStyle.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
+            chartArea1.AxisX.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.DimGray;
+            chartArea1.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea1.AxisX.Title = "Time";
+            chartArea1.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            chartArea1.AxisY.IsLabelAutoFit = false;
+            chartArea1.AxisY.LabelAutoFitMaxFontSize = 7;
+            chartArea1.AxisY.LabelAutoFitMinFontSize = 7;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.DimGray;
+            chartArea1.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea1.AxisY.Title = "Ping (ms)";
+            chartArea1.AxisY.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            chartArea1.AxisY2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 4F);
+            chartArea1.BackColor = System.Drawing.Color.Black;
+            chartArea1.BackSecondaryColor = System.Drawing.Color.White;
+            chartArea1.InnerPlotPosition.Auto = false;
+            chartArea1.InnerPlotPosition.Height = 85F;
+            chartArea1.InnerPlotPosition.Width = 93F;
+            chartArea1.InnerPlotPosition.X = 7F;
+            chartArea1.InnerPlotPosition.Y = 2F;
+            chartArea1.Name = "ChartArea1";
+            this.chartPings.ChartAreas.Add(chartArea1);
             this.chartPings.Location = new System.Drawing.Point(259, 32);
             this.chartPings.Name = "chartPings";
-            series2.BorderWidth = 2;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Color = System.Drawing.Color.Lime;
-            series2.Name = "Series1";
-            dataPoint2.Color = System.Drawing.Color.Red;
-            series2.Points.Add(dataPoint2);
-            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            this.chartPings.Series.Add(series2);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Color = System.Drawing.Color.Lime;
+            series1.Name = "Series1";
+            dataPoint1.Color = System.Drawing.Color.Red;
+            series1.Points.Add(dataPoint1);
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            this.chartPings.Series.Add(series1);
             this.chartPings.Size = new System.Drawing.Size(627, 356);
             this.chartPings.TabIndex = 17;
             this.chartPings.Text = "chart1";
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(185, 81);
+            this.progressBar1.Location = new System.Drawing.Point(185, 116);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(77, 13);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -572,19 +576,26 @@
             // exportDataFileToolStripMenuItem
             // 
             this.exportDataFileToolStripMenuItem.Name = "exportDataFileToolStripMenuItem";
-            this.exportDataFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.exportDataFileToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.exportDataFileToolStripMenuItem.Text = "Export data to file...";
             this.exportDataFileToolStripMenuItem.Click += new System.EventHandler(this.exportDataFileToolStripMenuItem_Click);
+            // 
+            // exportChartMenuItem
+            // 
+            this.exportChartMenuItem.Name = "exportChartMenuItem";
+            this.exportChartMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exportChartMenuItem.Text = "Export chart to file...";
+            this.exportChartMenuItem.Click += new System.EventHandler(this.exportChartMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(176, 6);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(179, 22);
             this.exitToolStripMenuItem1.Text = "E&xit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
@@ -617,18 +628,40 @@
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // exportChartMenuItem
+            // label3
             // 
-            this.exportChartMenuItem.Name = "exportChartMenuItem";
-            this.exportChartMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.exportChartMenuItem.Text = "Export chart to file...";
-            this.exportChartMenuItem.Click += new System.EventHandler(this.exportChartMenuItem_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(24, 61);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 13);
+            this.label3.TabIndex = 28;
+            this.label3.Text = "Using interface:";
+            // 
+            // listBoxNetworkInterface
+            // 
+            this.listBoxNetworkInterface.FormattingEnabled = true;
+            this.listBoxNetworkInterface.Location = new System.Drawing.Point(117, 57);
+            this.listBoxNetworkInterface.Name = "listBoxNetworkInterface";
+            this.listBoxNetworkInterface.Size = new System.Drawing.Size(145, 17);
+            this.listBoxNetworkInterface.TabIndex = 29;
+            // 
+            // textBoxUserNotes
+            // 
+            this.textBoxUserNotes.Location = new System.Drawing.Point(325, 369);
+            this.textBoxUserNotes.Multiline = true;
+            this.textBoxUserNotes.Name = "textBoxUserNotes";
+            this.textBoxUserNotes.Size = new System.Drawing.Size(537, 34);
+            this.textBoxUserNotes.TabIndex = 30;
+            this.textBoxUserNotes.Text = "Type notes/observations here; will accompany any saved data";
             // 
             // PlotPing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 377);
+            this.ClientSize = new System.Drawing.Size(874, 423);
+            this.Controls.Add(this.textBoxUserNotes);
+            this.Controls.Add(this.listBoxNetworkInterface);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblGreenPing);
@@ -726,6 +759,10 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolTip toolTipHover;
         private System.Windows.Forms.ToolStripMenuItem exportChartMenuItem;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox listBoxNetworkInterface;
+        private System.Windows.Forms.ToolTip toolTipNetworkInterface;
+        private System.Windows.Forms.TextBox textBoxUserNotes;
     }
 }
 
