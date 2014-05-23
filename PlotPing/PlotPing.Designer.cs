@@ -110,9 +110,9 @@
             "www.google.com",
             "www.facebook.com",
             "speedtest.cfl.rr.com"});
-            this.addrComboBox.Location = new System.Drawing.Point(117, 27);
+            this.addrComboBox.Location = new System.Drawing.Point(98, 27);
             this.addrComboBox.Name = "addrComboBox";
-            this.addrComboBox.Size = new System.Drawing.Size(145, 21);
+            this.addrComboBox.Size = new System.Drawing.Size(241, 21);
             this.addrComboBox.TabIndex = 9;
             this.addrComboBox.Text = "www.google.com";
             // 
@@ -122,7 +122,7 @@
             this.hopCol,
             this.ipCol,
             this.curTimeCol});
-            this.routeListView.Location = new System.Drawing.Point(27, 140);
+            this.routeListView.Location = new System.Drawing.Point(27, 168);
             this.routeListView.Name = "routeListView";
             this.routeListView.Size = new System.Drawing.Size(235, 248);
             this.routeListView.TabIndex = 8;
@@ -148,7 +148,7 @@
             // 
             // traceBtn
             // 
-            this.traceBtn.Location = new System.Drawing.Point(185, 89);
+            this.traceBtn.Location = new System.Drawing.Point(185, 117);
             this.traceBtn.Name = "traceBtn";
             this.traceBtn.Size = new System.Drawing.Size(77, 23);
             this.traceBtn.TabIndex = 7;
@@ -159,7 +159,7 @@
             // addrLbl
             // 
             this.addrLbl.AutoSize = true;
-            this.addrLbl.Location = new System.Drawing.Point(24, 27);
+            this.addrLbl.Location = new System.Drawing.Point(11, 27);
             this.addrLbl.Name = "addrLbl";
             this.addrLbl.Size = new System.Drawing.Size(87, 13);
             this.addrLbl.TabIndex = 6;
@@ -176,7 +176,7 @@
             // nTraceLbl
             // 
             this.nTraceLbl.AutoSize = true;
-            this.nTraceLbl.Location = new System.Drawing.Point(20, 90);
+            this.nTraceLbl.Location = new System.Drawing.Point(20, 118);
             this.nTraceLbl.Name = "nTraceLbl";
             this.nTraceLbl.Size = new System.Drawing.Size(91, 13);
             this.nTraceLbl.TabIndex = 10;
@@ -185,7 +185,7 @@
             // 
             // nTraceUpDown
             // 
-            this.nTraceUpDown.Location = new System.Drawing.Point(117, 88);
+            this.nTraceUpDown.Location = new System.Drawing.Point(117, 116);
             this.nTraceUpDown.Name = "nTraceUpDown";
             this.nTraceUpDown.Size = new System.Drawing.Size(62, 20);
             this.nTraceUpDown.TabIndex = 12;
@@ -193,7 +193,7 @@
             // traceIntLbl
             // 
             this.traceIntLbl.AutoSize = true;
-            this.traceIntLbl.Location = new System.Drawing.Point(10, 116);
+            this.traceIntLbl.Location = new System.Drawing.Point(10, 144);
             this.traceIntLbl.Name = "traceIntLbl";
             this.traceIntLbl.Size = new System.Drawing.Size(101, 13);
             this.traceIntLbl.TabIndex = 13;
@@ -207,7 +207,7 @@
             0,
             0,
             65536});
-            this.traceIntUpDown.Location = new System.Drawing.Point(117, 114);
+            this.traceIntUpDown.Location = new System.Drawing.Point(117, 142);
             this.traceIntUpDown.Maximum = new decimal(new int[] {
             86400,
             0,
@@ -231,7 +231,7 @@
             // 
             this.roundTripLbl.AutoSize = true;
             this.roundTripLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roundTripLbl.Location = new System.Drawing.Point(114, 391);
+            this.roundTripLbl.Location = new System.Drawing.Point(114, 419);
             this.roundTripLbl.Name = "roundTripLbl";
             this.roundTripLbl.Size = new System.Drawing.Size(103, 13);
             this.roundTripLbl.TabIndex = 15;
@@ -241,7 +241,7 @@
             // 
             this.totPingLbl.AutoSize = true;
             this.totPingLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totPingLbl.Location = new System.Drawing.Point(223, 391);
+            this.totPingLbl.Location = new System.Drawing.Point(223, 419);
             this.totPingLbl.Name = "totPingLbl";
             this.totPingLbl.Size = new System.Drawing.Size(30, 13);
             this.totPingLbl.TabIndex = 16;
@@ -280,7 +280,7 @@
             chartArea1.InnerPlotPosition.Y = 2F;
             chartArea1.Name = "ChartArea1";
             this.chartPings.ChartAreas.Add(chartArea1);
-            this.chartPings.Location = new System.Drawing.Point(259, 32);
+            this.chartPings.Location = new System.Drawing.Point(308, 27);
             this.chartPings.Name = "chartPings";
             series1.BorderWidth = 2;
             series1.ChartArea = "ChartArea1";
@@ -291,13 +291,13 @@
             series1.Points.Add(dataPoint1);
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             this.chartPings.Series.Add(series1);
-            this.chartPings.Size = new System.Drawing.Size(627, 356);
+            this.chartPings.Size = new System.Drawing.Size(692, 356);
             this.chartPings.TabIndex = 17;
             this.chartPings.Text = "chart1";
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(185, 116);
+            this.progressBar1.Location = new System.Drawing.Point(185, 144);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(77, 13);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -308,7 +308,7 @@
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(314, 7);
+            this.lblTitle.Location = new System.Drawing.Point(363, 2);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(110, 17);
             this.lblTitle.TabIndex = 19;
@@ -318,7 +318,7 @@
             // 
             this.lblTarget.AutoSize = true;
             this.lblTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarget.Location = new System.Drawing.Point(430, 9);
+            this.lblTarget.Location = new System.Drawing.Point(479, 4);
             this.lblTarget.Name = "lblTarget";
             this.lblTarget.Size = new System.Drawing.Size(30, 13);
             this.lblTarget.TabIndex = 20;
@@ -328,7 +328,7 @@
             // 
             this.lblSampleInt.AutoSize = true;
             this.lblSampleInt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSampleInt.Location = new System.Drawing.Point(315, 24);
+            this.lblSampleInt.Location = new System.Drawing.Point(364, 19);
             this.lblSampleInt.Name = "lblSampleInt";
             this.lblSampleInt.Size = new System.Drawing.Size(109, 17);
             this.lblSampleInt.TabIndex = 21;
@@ -338,7 +338,7 @@
             // 
             this.lblStartTime.AutoSize = true;
             this.lblStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStartTime.Location = new System.Drawing.Point(430, 26);
+            this.lblStartTime.Location = new System.Drawing.Point(479, 21);
             this.lblStartTime.Name = "lblStartTime";
             this.lblStartTime.Size = new System.Drawing.Size(27, 13);
             this.lblStartTime.TabIndex = 22;
@@ -348,7 +348,7 @@
             // 
             this.lblEndTime.AutoSize = true;
             this.lblEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEndTime.Location = new System.Drawing.Point(592, 26);
+            this.lblEndTime.Location = new System.Drawing.Point(641, 21);
             this.lblEndTime.Name = "lblEndTime";
             this.lblEndTime.Size = new System.Drawing.Size(27, 13);
             this.lblEndTime.TabIndex = 23;
@@ -358,7 +358,7 @@
             // lblGreenPing
             // 
             this.lblGreenPing.BackColor = System.Drawing.Color.Lime;
-            this.lblGreenPing.Location = new System.Drawing.Point(767, 3);
+            this.lblGreenPing.Location = new System.Drawing.Point(873, -4);
             this.lblGreenPing.Name = "lblGreenPing";
             this.lblGreenPing.Size = new System.Drawing.Size(100, 13);
             this.lblGreenPing.TabIndex = 24;
@@ -368,7 +368,7 @@
             // label1
             // 
             this.label1.BackColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(767, 16);
+            this.label1.Location = new System.Drawing.Point(873, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 25;
@@ -379,7 +379,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(767, 28);
+            this.label2.Location = new System.Drawing.Point(873, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 26;
@@ -624,14 +624,14 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.menuStrip1.Size = new System.Drawing.Size(874, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1012, 24);
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 61);
+            this.label3.Location = new System.Drawing.Point(11, 57);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(81, 13);
             this.label3.TabIndex = 28;
@@ -640,17 +640,17 @@
             // listBoxNetworkInterface
             // 
             this.listBoxNetworkInterface.FormattingEnabled = true;
-            this.listBoxNetworkInterface.Location = new System.Drawing.Point(117, 57);
+            this.listBoxNetworkInterface.Location = new System.Drawing.Point(98, 57);
             this.listBoxNetworkInterface.Name = "listBoxNetworkInterface";
-            this.listBoxNetworkInterface.Size = new System.Drawing.Size(145, 17);
+            this.listBoxNetworkInterface.Size = new System.Drawing.Size(241, 43);
             this.listBoxNetworkInterface.TabIndex = 29;
             // 
             // textBoxUserNotes
             // 
-            this.textBoxUserNotes.Location = new System.Drawing.Point(325, 369);
+            this.textBoxUserNotes.Location = new System.Drawing.Point(352, 369);
             this.textBoxUserNotes.Multiline = true;
             this.textBoxUserNotes.Name = "textBoxUserNotes";
-            this.textBoxUserNotes.Size = new System.Drawing.Size(537, 34);
+            this.textBoxUserNotes.Size = new System.Drawing.Size(621, 63);
             this.textBoxUserNotes.TabIndex = 30;
             this.textBoxUserNotes.Text = "Type notes/observations here; will accompany any saved data";
             // 
@@ -658,7 +658,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 423);
+            this.ClientSize = new System.Drawing.Size(1012, 444);
             this.Controls.Add(this.textBoxUserNotes);
             this.Controls.Add(this.listBoxNetworkInterface);
             this.Controls.Add(this.label3);

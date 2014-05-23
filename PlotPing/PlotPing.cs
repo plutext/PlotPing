@@ -17,6 +17,22 @@ namespace PlotPing
 {
     public partial class PlotPing : Form
     {
+        /// <summary>
+        /// To save bandwidth, perform the traceroute once only.  
+        /// After that, just ping the last hop entry
+        /// UNLESS last ping was > MAX_PING_MS_YELLOW
+        /// This is consistent with the data we save (ie even if we keep
+        /// repeating the traceroute, the traceroute data is thrown away).
+        /// POSSIBLY: add a toggle to the UI allowing the user to control this.
+        /// </summary>
+        private Boolean TRACEROUTE_ONCE_ONLY = true;
+
+        /// <summary>
+        /// Use green (lime actually), for time less than this
+        /// </summary>
+        private int MAX_PING_MS_GREEN = 200; // more evocative than calling it _LIME
+        private int MAX_PING_MS_YELLOW = 500;
+
         private List<DateTime> dates = new List<DateTime>();
         private BindingList<long> pings = new BindingList<long>();
         private string hostOrIp;
@@ -29,6 +45,8 @@ namespace PlotPing
         private DateTime tEnd;
         private int nDataPts = 240;
         private int nGridPts = 8;
+
+        private int AXIS_Y_MAXIMUM = 1200; // use -1 to scale; I prefer not to scale it
 
         private NetworkInterface[] networkInterfaces;
         private NetworkInterface networkInterface;
@@ -52,6 +70,25 @@ namespace PlotPing
 
             listBoxNetworkInterface.MouseMove += new MouseEventHandler(listBox1_MouseMove);
 
+            routeListView.ItemDrag += new ItemDragEventHandler(routeListView_ItemDrag);
+
+        }
+
+        /// <summary>
+        /// Provides an easy way to copy the IP address from one of the 
+        /// hops.  Use case: you enter google.com, but you really only
+        /// care whether your packets are making it through your ISP,
+        /// so you want to copy an IP address much closer to home
+        /// (and restart PlotPing using that).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void routeListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            ListViewItem item = (ListViewItem)e.Item;
+            string ip = item.SubItems[1].Text;
+            System.Windows.Forms.Clipboard.SetText(ip);
+            MessageBox.Show(ip + " on clipboard");
         }
 
 
@@ -60,6 +97,8 @@ namespace PlotPing
         {
             // Adapted from http://www.codeproject.com/Articles/32124/Showing-a-Separate-Tooltip-for-Each-Item-in-a-List
             // License is http://www.codeproject.com/info/cpol10.aspx
+
+            // TODO: fix the flickering
 
                 try
                 {
@@ -72,9 +111,12 @@ namespace PlotPing
                     }
                     if ((itemIndex >= 0 && itemIndex!=lastIndex))
                     {
-                        toolTipNetworkInterface.SetToolTip(objListBox,
-                            interfaceTooltip(networkInterfaces[itemIndex]));
+                        string tooltip = interfaceTooltip(networkInterfaces[itemIndex]);
+                        toolTipNetworkInterface.SetToolTip(objListBox, tooltip );
                         lastIndex = itemIndex;
+
+                        // Also stick it in here, so you can read without flickering
+                        this.textBoxUserNotes.Text = tooltip;
                     }
                     else
                     {
@@ -184,6 +226,7 @@ namespace PlotPing
             // get sleep time and convert sec to ms
             int tsleep = (int)(1000*traceIntUpDown.Value);
 
+            List<Hop> hops=null;
             for (int i = 0; i < nTraces; i++)
             {
                 if (worker.CancellationPending)
@@ -191,18 +234,33 @@ namespace PlotPing
                     e.Cancel = true;
                     break;
                 }
-                List<Hop> hops = RouteTracer.traceRoute(hostOrIp, timeout: 1000);
+                if (previousPing == -1 || previousPing > MAX_PING_MS_YELLOW)
+                {
+                    // traceroute to all hops, to diagnose issue
+                    hops = RouteTracer.traceRoute(hostOrIp, 0, timeout: 1000);
+                }
+                else if (TRACEROUTE_ONCE_ONLY && hops != null)
+                {
+                    hops = RouteTracer.traceRoute(hostOrIp, hops.Count-1, timeout: 1000);
+                }
+                else
+                {
+                    hops = RouteTracer.traceRoute(hostOrIp, 0, timeout: 1000);
+                }
                 tracertBackgroundWorker.ReportProgress(i, hops);
                 Thread.Sleep(tsleep);
             }
         }
+
+        private long previousPing = -1;
 
         // updates the program for each completed ping (a full traceroute).
         private void tracertBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
             List<Hop> hops = (List<Hop>)e.UserState;
-            totPingLbl.Text = hops.Last().time.ToString() + " ms";
+            previousPing = hops.Last().time;
+            totPingLbl.Text = previousPing.ToString() + " ms";
 
             // initialize or update table
             if (i == 0)
@@ -211,7 +269,7 @@ namespace PlotPing
                 if (hops.Last().time == -1)
                 {
                     tracertBackgroundWorker.CancelAsync();
-                    MessageBox.Show("Could not establish connection to address!  The address might be invaild or it may be down. There may also be a problem with your connection.", "PlotPing: ERROR");
+                    MessageBox.Show("Could not establish connection to address!  The address might not support ICMP, be invalid or it may be down. There may also be a problem with your connection.", "PlotPing: ERROR");
                     //chartPings.Visible = false;
                     return;
                 }
@@ -221,8 +279,16 @@ namespace PlotPing
                 chartPings.Series[0].Points.Clear();
                 initChart();
             }
-            else
+            else if (previousPing == -1 || previousPing > MAX_PING_MS_YELLOW)
+            {
+                // FIXME: this is reacting one iteration too late?
+                // but that's ok for a problem which goes on for a while
+                drawTable(hops); 
+            } 
+            else if (!TRACEROUTE_ONCE_ONLY)
+            {
                 drawTable(hops);
+            }
 
             // plot results so far
             updateChart(hops.Last().time);
@@ -256,9 +322,9 @@ namespace PlotPing
                 item.SubItems.Add(hop.time.ToString());
 
                 // color code pings 
-                if (hop.time <= 200 && hop.time >= 0)
+                if (hop.time <= MAX_PING_MS_GREEN && hop.time >= 0)
                     item.SubItems[2].BackColor = Color.Lime;
-                else if (hop.time > 200 && hop.time <= 500)
+                else if (hop.time > MAX_PING_MS_GREEN && hop.time <= MAX_PING_MS_YELLOW)
                     item.SubItems[2].BackColor = Color.Yellow;
                 else
                     item.SubItems[2].BackColor = Color.Red;
@@ -294,11 +360,11 @@ namespace PlotPing
 
                     // color code pings 
                     Color bg = curItem.SubItems[2].BackColor;
-                    if (curHop.time <= 200 && curHop.time != -1 && bg != Color.Lime)
+                    if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime)
                         curItem.SubItems[2].BackColor = Color.Lime;
-                    else if (curHop.time > 200 && curHop.time <= 500 && bg != Color.Yellow)
+                    else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow)
                         curItem.SubItems[2].BackColor = Color.Yellow;
-                    else if (curHop.time > 500 || curHop.time == -1 && bg != Color.Red)
+                    else if (curHop.time > MAX_PING_MS_YELLOW || curHop.time == -1 && bg != Color.Red)
                         curItem.SubItems[2].BackColor = Color.Red;
                 }
             }
@@ -326,6 +392,10 @@ namespace PlotPing
             // get reference to plot axes
             axisX = chartPings.ChartAreas[0].AxisX;
             axisY = chartPings.ChartAreas[0].AxisY;
+
+            if (AXIS_Y_MAXIMUM>0) {
+                axisY.Maximum = AXIS_Y_MAXIMUM;
+                }
 
             // establish the grid and labels
             axisX.LabelStyle.Interval = dx * traceInterval;
@@ -410,23 +480,28 @@ namespace PlotPing
             // no data present
             if (pings.Count == 0 || dates.Count == 0)
             {
-                MessageBox.Show("No data availible to export!", "Error!");
+                MessageBox.Show("No data available to export!", "Error!");
                 return;
             }
 
             string fileName = "";
-            saveFileDialog1.Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt";
+            saveFileDialog1.Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|RRD Files (*.rrd)|*.rrd";
 
             if (saveFileDialog1.ShowDialog() != DialogResult.Cancel)
             {
                 fileName = saveFileDialog1.FileName;
-                try
+                if (fileName.EndsWith(".rrd"))
                 {
-                    saveCSV(fileName);
-                }
-                catch(IOException ioErr)
-                {
-                    MessageBox.Show(ioErr.Message, "Error");
+                    RRD.save(fileName, traceInterval, dates, pings, hostOrIp, this.routeToDestination, interfaceTooltip(networkInterface), this.textBoxUserNotes.Text);
+                } else {
+                    try
+                    {
+                        saveCSV(fileName);
+                    }
+                    catch(IOException ioErr)
+                    {
+                        MessageBox.Show(ioErr.Message, "Error");
+                    }
                 }
             }
         }

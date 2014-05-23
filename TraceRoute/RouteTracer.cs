@@ -14,7 +14,7 @@ namespace TraceRoute
     /// </summary>
     public class RouteTracer
     {
-        public static List<Hop> traceRoute(string ipAddrOrHostname, int maxHops=30, int timeout=5000, byte[] buffer=null)
+        public static List<Hop> traceRoute(string ipAddrOrHostname, int minHops, int maxHops=50, int timeout=5000, byte[] buffer=null)
         {
             PingOptions pingOpts = new PingOptions();
             Stopwatch      watch = new Stopwatch();
@@ -25,7 +25,7 @@ namespace TraceRoute
                 buffer = new byte[32];
 
             List<Hop> hops = new List<Hop>();
-            for (int i = 0; i < maxHops; i++)
+            for (int i = minHops; i < maxHops; i++)
             {
                 // send ping and hop, and keep track of the time it takes
                 Ping pinger = new Ping();
