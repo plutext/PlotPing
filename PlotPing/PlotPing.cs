@@ -386,27 +386,37 @@ namespace PlotPing
                 // color code pings 
                 if (hop.time <= MAX_PING_MS_GREEN && hop.time >= 0) {
                     item.SubItems[2].BackColor = Color.Lime;
-                    // Don't count pings of our local gateway
-                    if (gateway == null || !gateway.Equals(hop.ip))
-                    {
-                        this.counterGreen++;
-                    }
                 }
                 else if (hop.time > MAX_PING_MS_GREEN && hop.time <= MAX_PING_MS_YELLOW)
                 {
                     item.SubItems[2].BackColor = Color.Yellow;
-                    this.counterYellow++;
                 }
                 else
                 {
                     item.SubItems[2].BackColor = Color.Red;
-                    this.counterRed++;
                 }
 
                 routeListView.Items.Add(item);
             }
+            updateCounters(hops[hops.Count - 1]);
             
             hideHScrollBar();
+        }
+
+        private void updateCounters(Hop hop) // only do this for the last hop
+        {
+            if (hop.time <= MAX_PING_MS_GREEN && hop.time >= 0)
+            {
+                    this.counterGreen++;
+            }
+            else if (hop.time > MAX_PING_MS_GREEN && hop.time <= MAX_PING_MS_YELLOW)
+            {
+                this.counterYellow++;
+            }
+            else
+            {
+                this.counterRed++;
+            }
         }
 
         // redraws the trace route table
@@ -433,6 +443,7 @@ namespace PlotPing
         {
             ListViewItem curItem = routeListView.Items[routeListView.Items.Count-1];
             updateTableRow(curHop, curItem);
+            updateCounters(curHop);
         }
 
         private void updateTableRow(Hop curHop, ListViewItem curItem)
@@ -451,19 +462,12 @@ namespace PlotPing
             Color bg = curItem.SubItems[2].BackColor;
             if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime) {
                 curItem.SubItems[2].BackColor = Color.Lime;
-                // Don't count pings of our local gateway
-                if (gateway == null || !gateway.Equals(curHop.ip))
-                {
-                    this.counterGreen++;
-                }
             } else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow) {
                 curItem.SubItems[2].BackColor = Color.Yellow;
-                this.counterYellow++;
             }
             else if (curHop.time > MAX_PING_MS_YELLOW || curHop.time == -1 && bg != Color.Red)
             {
                 curItem.SubItems[2].BackColor = Color.Red;
-                this.counterRed++;
             }
         }
 
