@@ -33,6 +33,10 @@ namespace PlotPing
         private int MAX_PING_MS_GREEN = 200; // more evocative than calling it _LIME
         private int MAX_PING_MS_YELLOW = 500;
 
+        private int counterGreen = 0;
+        private int counterYellow = 0;
+        private int counterRed = 0;
+
         private List<DateTime> dates = new List<DateTime>();
         private BindingList<long> pings = new BindingList<long>();
         private string hostOrIp;
@@ -47,11 +51,15 @@ namespace PlotPing
         private int nGridPts = 8;
 
         private int AXIS_Y_MAXIMUM = 1200; // use -1 to scale; I prefer not to scale it
+        private long quickest = 1200; // keep track of our fastest ping time
 
         private NetworkInterface[] networkInterfaces;
         private NetworkInterface networkInterface;
 
         private string routeToDestination;
+        private GatewayIPAddressInformation gateway;
+
+        private List<EndPoint> endpoints = new List<EndPoint>();
 
         public PlotPing()
         {
@@ -59,6 +67,18 @@ namespace PlotPing
             traceIntUpDown.Maximum = Decimal.MaxValue;
             nTraceUpDown.Maximum = Decimal.MaxValue;
             chartPings.Visible = false;
+
+            // TODO persist these values
+            endpoints.Add(new EndPoint("www.google.com"));
+            endpoints.Add(new EndPoint("slashdot.org"));
+            endpoints.Add(new EndPoint("172.24.223.225", "Optus"));
+            endpoints.Add(new EndPoint("10.143.110.65", "Vodafone"));
+            endpoints.Add(new EndPoint("139.130.111.73", "Telstra"));
+            endpoints.Add(new EndPoint("10.202.0.1", "Connectify Gateway"));
+            //, "101.119.16.21"
+            endpoints.Add(new EndPoint("125.63.57.173", "Connectify Sydney")); 
+
+            this.addrComboBox.Items.AddRange(endpoints.ToArray());
 
             // Populate available interfaces
             networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -139,6 +159,7 @@ namespace PlotPing
                 sb.AppendLine("** Status " + adapter.OperationalStatus + " **");
             }
             sb.AppendLine("Name\t\t: " + adapter.Name);
+            //sb.AppendLine("Id\t\t: " + adapter.Id);
             sb.AppendLine("Type\t\t: " + adapter.NetworkInterfaceType);
             sb.AppendLine("Description\t: " + adapter.Description);
             UnicastIPAddressInformationCollection unicastIPC = adapter.GetIPProperties().UnicastAddresses;
@@ -167,15 +188,28 @@ namespace PlotPing
 
         private void traceBtn_Click(object sender, EventArgs e)
         {
-            hostOrIp = addrComboBox.Text;
-            if (!addrComboBox.Items.Contains(hostOrIp))
-                addrComboBox.Items.Add(hostOrIp);
+            EndPoint theEndPoint = null;
+            foreach (EndPoint ep in endpoints)
+            {
+                if (ep.ToString().Equals(addrComboBox.Text))
+                {
+                    theEndPoint = ep;
+                    break;
+                }
+            }
+
+            if (theEndPoint == null)
+            {
+                theEndPoint = new EndPoint(addrComboBox.Text);
+                addrComboBox.Items.Add(theEndPoint);
+                endpoints.Add(theEndPoint);
+            }
+            hostOrIp = theEndPoint.HostOrIp;
             
             // start traceroute if not already running, otherwise kill it.
             if (!tracertBackgroundWorker.IsBusy)
             {
                 // save user input here
-                hostOrIp = addrComboBox.Text;
                 nTraces = (int)nTraceUpDown.Value;
                 traceInterval = (double)traceIntUpDown.Value;
                 tStart = DateTime.Now;
@@ -185,6 +219,10 @@ namespace PlotPing
                 {
                     // set the route
                     routeToDestination = NetworkInterfaceUtils.AddRoute(networkInterface, hostOrIp);
+
+                    IPInterfaceProperties properties = networkInterface.GetIPProperties();
+                    GatewayIPAddressInformationCollection gateways = properties.GatewayAddresses;
+                    gateway = gateways[0]; // just use the first one
                 }
 
                 // clear any previously logged data
@@ -234,32 +272,33 @@ namespace PlotPing
                     e.Cancel = true;
                     break;
                 }
-                if (previousPing == -1 || previousPing > MAX_PING_MS_YELLOW)
+                if (forceTableUpdate)
                 {
                     // traceroute to all hops, to diagnose issue
-                    hops = RouteTracer.traceRoute(hostOrIp, 0, timeout: 1000);
+                    hops = RouteTracer.traceRoute(hostOrIp, gateway, 0, timeout: AXIS_Y_MAXIMUM);
                 }
                 else if (TRACEROUTE_ONCE_ONLY && hops != null)
                 {
-                    hops = RouteTracer.traceRoute(hostOrIp, hops.Count-1, timeout: 1000);
+                    hops = RouteTracer.traceRoute(hostOrIp, gateway, hops.Count - 1, timeout: AXIS_Y_MAXIMUM);
                 }
                 else
                 {
-                    hops = RouteTracer.traceRoute(hostOrIp, 0, timeout: 1000);
+                    hops = RouteTracer.traceRoute(hostOrIp, gateway, 0, timeout: AXIS_Y_MAXIMUM);
                 }
                 tracertBackgroundWorker.ReportProgress(i, hops);
                 Thread.Sleep(tsleep);
             }
         }
 
-        private long previousPing = -1;
+
+        private bool forceTableUpdate = false;
 
         // updates the program for each completed ping (a full traceroute).
         private void tracertBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int i = e.ProgressPercentage;
             List<Hop> hops = (List<Hop>)e.UserState;
-            previousPing = hops.Last().time;
+            long previousPing = hops.Last().time;
             totPingLbl.Text = previousPing.ToString() + " ms";
 
             // initialize or update table
@@ -281,13 +320,19 @@ namespace PlotPing
             }
             else if (previousPing == -1 || previousPing > MAX_PING_MS_YELLOW)
             {
-                // FIXME: this is reacting one iteration too late?
+                // FIXME: this is reacting an iteration or 2 too late..
                 // but that's ok for a problem which goes on for a while
-                drawTable(hops); 
+                updateLastTableRow(hops.Last());
+                forceTableUpdate = true;
             }
             else if (!TRACEROUTE_ONCE_ONLY)
             {
                 drawTable(hops);
+            }
+            else if (forceTableUpdate)
+            {
+                drawTable(hops);
+                forceTableUpdate = false;
             }
             else
             {
@@ -297,6 +342,18 @@ namespace PlotPing
 
             // plot results so far
             updateChart(hops.Last().time);
+
+            // update stats
+            int total = counterGreen + counterYellow + counterRed;
+            this.labelGreenPercent.Text = Math.Round((decimal)counterGreen * 100 / total)+"%";
+            this.labelRedPercent.Text = Math.Round((decimal)counterRed * 100 / total) + "%";
+
+            if (hops.Last().time > 0
+                && hops.Last().time < quickest)
+            {
+                quickest = hops.Last().time;
+                this.textBoxFastestResult.Text = ""+quickest;
+            }
 
             // update sample interval
             tEnd = DateTime.Now;
@@ -327,12 +384,24 @@ namespace PlotPing
                 item.SubItems.Add(hop.time.ToString());
 
                 // color code pings 
-                if (hop.time <= MAX_PING_MS_GREEN && hop.time >= 0)
+                if (hop.time <= MAX_PING_MS_GREEN && hop.time >= 0) {
                     item.SubItems[2].BackColor = Color.Lime;
+                    // Don't count pings of our local gateway
+                    if (gateway == null || !gateway.Equals(hop.ip))
+                    {
+                        this.counterGreen++;
+                    }
+                }
                 else if (hop.time > MAX_PING_MS_GREEN && hop.time <= MAX_PING_MS_YELLOW)
+                {
                     item.SubItems[2].BackColor = Color.Yellow;
+                    this.counterYellow++;
+                }
                 else
+                {
                     item.SubItems[2].BackColor = Color.Red;
+                    this.counterRed++;
+                }
 
                 routeListView.Items.Add(item);
             }
@@ -380,13 +449,22 @@ namespace PlotPing
 
             // color code pings 
             Color bg = curItem.SubItems[2].BackColor;
-            if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime)
+            if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime) {
                 curItem.SubItems[2].BackColor = Color.Lime;
-            else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow)
+                // Don't count pings of our local gateway
+                if (gateway == null || !gateway.Equals(hop.ip))
+                {
+                    this.counterGreen++;
+                }
+            } else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow) {
                 curItem.SubItems[2].BackColor = Color.Yellow;
+                this.counterYellow++;
+            }
             else if (curHop.time > MAX_PING_MS_YELLOW || curHop.time == -1 && bg != Color.Red)
+            {
                 curItem.SubItems[2].BackColor = Color.Red;
-
+                this.counterRed++;
+            }
         }
 
         // hides the horizontal scroll bar on the traceroute table (routeListView)

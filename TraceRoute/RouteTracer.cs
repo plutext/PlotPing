@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace TraceRoute
 {   
@@ -14,56 +15,106 @@ namespace TraceRoute
     /// </summary>
     public class RouteTracer
     {
-        public static List<Hop> traceRoute(string ipAddrOrHostname, int minHops, int maxHops=50, int timeout=5000, byte[] buffer=null)
+        public static List<Hop> traceRoute(string ipAddrOrHostname, GatewayIPAddressInformation gateway, int minHops, int maxHops = 50, int timeout = 5000, byte[] buffer = null)
         {
             PingOptions pingOpts = new PingOptions();
             Stopwatch      watch = new Stopwatch();
-            pingOpts.Ttl = 1;   // only allow one hop initially
+            //pingOpts.Ttl = 1;   // only allow one hop initially
 
             // create default buffer to send if not specified
             if (buffer == null)
                 buffer = new byte[32];
 
             List<Hop> hops = new List<Hop>();
-            for (int i = minHops; i < maxHops; i++)
+            
+            // Always do the first hop, so we can verify expected route is being used;
+            // and if no interface was specified, well, its cheap anyway, since this is inside our PC 
+            if (doPing(0, hops, pingOpts, watch, ipAddrOrHostname, timeout, buffer))
             {
-                // send ping and hop, and keep track of the time it takes
-                Ping pinger = new Ping();
-                watch.Reset();
-                watch.Start();
-
-                // make sure that the address is a vaild one
-                PingReply reply;
-                try
+                // check it 
+                if (gateway!=null)
                 {
-                    reply = pinger.Send(ipAddrOrHostname, timeout, buffer, pingOpts);
+                    if (!gateway.Address.ToString().Equals(hops[0].ip))
+                    {
+                        MessageBox.Show("WARNING: First hop" + hops[0].ip
+                            + " didn't match intended gateway " + gateway.Address.ToString() + "; try 'route print'.");
+                    }
                 }
-                catch (PingException e)
+            }
+            else
+            {
+                // stop
+                if (gateway != null)
                 {
-                    hops.Add(new Hop(i, "Request timed out", -1, true));
-                    break;
-                    //throw (e);
+                    MessageBox.Show("Gateway " + gateway.Address.ToString() + " down?");
                 }
-                watch.Stop();
-
-
-                // catch and fix timed out hops
-                Hop curHop;
-                if (reply.Status != IPStatus.TimedOut)
-                    curHop = new Hop(i, reply.Address.ToString(), watch.ElapsedMilliseconds, false);
                 else
-                    curHop = new Hop(i, "Request timed out", -1, true);
+                {
+                    MessageBox.Show(hops[0].ip);
+                }
+                return hops;
+            }
 
-                hops.Add(curHop);
-
-                // destination reached
-                if (reply.Status == IPStatus.Success)   
+            if (minHops > 0)
+            {
+                // prefill
+                for (int i = 1; i < minHops; i++)
+                {
+                    hops.Add(new Hop(i, "Dummy entry", -1, false));
+                }
+            }
+            int start = Math.Max(minHops, 1);
+            for (int i = start; i < maxHops; i++)
+            {
+                if (!doPing(i, hops, pingOpts, watch, ipAddrOrHostname,   timeout ,  buffer)) {
+                    // stop
                     break;
-                
-                // increment hops by 1
-                pingOpts.Ttl++;
+                }
             }
             return hops;
+        }
+
+        private static bool doPing(int hopNum, List<Hop> hops, PingOptions pingOpts, Stopwatch watch,
+            string ipAddrOrHostname,  int timeout , byte[] buffer)
+        {
+            pingOpts.Ttl = hopNum+1;
+
+            // send ping and hop, and keep track of the time it takes
+            Ping pinger = new Ping();
+            watch.Reset();
+            watch.Start();
+
+            // make sure that the address is a vaild one
+            PingReply reply;
+            try
+            {
+                reply = pinger.Send(ipAddrOrHostname, timeout, buffer, pingOpts);
+            }
+            catch (PingException e)
+            {
+                hops.Add(new Hop(hopNum, "Request timed out", -1, true));
+                //break;
+                return false;
+            }
+            watch.Stop();
+
+
+            // catch and fix timed out hops
+            Hop curHop;
+            if (reply.Status != IPStatus.TimedOut)
+                curHop = new Hop(hopNum, reply.Address.ToString(), watch.ElapsedMilliseconds, false);
+            else
+                curHop = new Hop(hopNum, "Request timed out", -1, true);
+
+            hops.Add(curHop);
+
+            // destination reached
+            if (reply.Status == IPStatus.Success)
+            {
+                //break;
+                return false;
+            }
+            return true;
         }
     }
 

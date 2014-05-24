@@ -97,6 +97,10 @@
             this.listBoxNetworkInterface = new System.Windows.Forms.ListBox();
             this.toolTipNetworkInterface = new System.Windows.Forms.ToolTip(this.components);
             this.textBoxUserNotes = new System.Windows.Forms.TextBox();
+            this.textBoxFastest = new System.Windows.Forms.TextBox();
+            this.textBoxFastestResult = new System.Windows.Forms.TextBox();
+            this.labelGreenPercent = new System.Windows.Forms.Label();
+            this.labelRedPercent = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nTraceUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.traceIntUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPings)).BeginInit();
@@ -106,15 +110,11 @@
             // addrComboBox
             // 
             this.addrComboBox.FormattingEnabled = true;
-            this.addrComboBox.Items.AddRange(new object[] {
-            "www.google.com",
-            "www.facebook.com",
-            "speedtest.cfl.rr.com"});
             this.addrComboBox.Location = new System.Drawing.Point(98, 27);
             this.addrComboBox.Name = "addrComboBox";
             this.addrComboBox.Size = new System.Drawing.Size(241, 21);
             this.addrComboBox.TabIndex = 9;
-            this.addrComboBox.Text = "www.google.com";
+            this.addrComboBox.Text = "type or select...";
             // 
             // routeListView
             // 
@@ -231,7 +231,7 @@
             // 
             this.roundTripLbl.AutoSize = true;
             this.roundTripLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roundTripLbl.Location = new System.Drawing.Point(114, 419);
+            this.roundTripLbl.Location = new System.Drawing.Point(122, 419);
             this.roundTripLbl.Name = "roundTripLbl";
             this.roundTripLbl.Size = new System.Drawing.Size(103, 13);
             this.roundTripLbl.TabIndex = 15;
@@ -241,7 +241,7 @@
             // 
             this.totPingLbl.AutoSize = true;
             this.totPingLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totPingLbl.Location = new System.Drawing.Point(223, 419);
+            this.totPingLbl.Location = new System.Drawing.Point(231, 419);
             this.totPingLbl.Name = "totPingLbl";
             this.totPingLbl.Size = new System.Drawing.Size(30, 13);
             this.totPingLbl.TabIndex = 16;
@@ -280,7 +280,7 @@
             chartArea1.InnerPlotPosition.Y = 2F;
             chartArea1.Name = "ChartArea1";
             this.chartPings.ChartAreas.Add(chartArea1);
-            this.chartPings.Location = new System.Drawing.Point(308, 27);
+            this.chartPings.Location = new System.Drawing.Point(316, 54);
             this.chartPings.Name = "chartPings";
             series1.BorderWidth = 2;
             series1.ChartArea = "ChartArea1";
@@ -308,7 +308,7 @@
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(363, 2);
+            this.lblTitle.Location = new System.Drawing.Point(371, 29);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(110, 17);
             this.lblTitle.TabIndex = 19;
@@ -318,7 +318,7 @@
             // 
             this.lblTarget.AutoSize = true;
             this.lblTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarget.Location = new System.Drawing.Point(479, 4);
+            this.lblTarget.Location = new System.Drawing.Point(487, 31);
             this.lblTarget.Name = "lblTarget";
             this.lblTarget.Size = new System.Drawing.Size(30, 13);
             this.lblTarget.TabIndex = 20;
@@ -328,7 +328,7 @@
             // 
             this.lblSampleInt.AutoSize = true;
             this.lblSampleInt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSampleInt.Location = new System.Drawing.Point(364, 19);
+            this.lblSampleInt.Location = new System.Drawing.Point(372, 46);
             this.lblSampleInt.Name = "lblSampleInt";
             this.lblSampleInt.Size = new System.Drawing.Size(109, 17);
             this.lblSampleInt.TabIndex = 21;
@@ -338,7 +338,7 @@
             // 
             this.lblStartTime.AutoSize = true;
             this.lblStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStartTime.Location = new System.Drawing.Point(479, 21);
+            this.lblStartTime.Location = new System.Drawing.Point(487, 48);
             this.lblStartTime.Name = "lblStartTime";
             this.lblStartTime.Size = new System.Drawing.Size(27, 13);
             this.lblStartTime.TabIndex = 22;
@@ -348,7 +348,7 @@
             // 
             this.lblEndTime.AutoSize = true;
             this.lblEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEndTime.Location = new System.Drawing.Point(641, 21);
+            this.lblEndTime.Location = new System.Drawing.Point(649, 48);
             this.lblEndTime.Name = "lblEndTime";
             this.lblEndTime.Size = new System.Drawing.Size(27, 13);
             this.lblEndTime.TabIndex = 23;
@@ -358,7 +358,7 @@
             // lblGreenPing
             // 
             this.lblGreenPing.BackColor = System.Drawing.Color.Lime;
-            this.lblGreenPing.Location = new System.Drawing.Point(873, -4);
+            this.lblGreenPing.Location = new System.Drawing.Point(881, 23);
             this.lblGreenPing.Name = "lblGreenPing";
             this.lblGreenPing.Size = new System.Drawing.Size(100, 13);
             this.lblGreenPing.TabIndex = 24;
@@ -368,7 +368,7 @@
             // label1
             // 
             this.label1.BackColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(873, 9);
+            this.label1.Location = new System.Drawing.Point(881, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 25;
@@ -379,7 +379,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(873, 21);
+            this.label2.Location = new System.Drawing.Point(881, 48);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 26;
@@ -624,7 +624,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.menuStrip1.Size = new System.Drawing.Size(1012, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1030, 24);
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -647,18 +647,56 @@
             // 
             // textBoxUserNotes
             // 
-            this.textBoxUserNotes.Location = new System.Drawing.Point(352, 369);
+            this.textBoxUserNotes.Location = new System.Drawing.Point(360, 416);
             this.textBoxUserNotes.Multiline = true;
             this.textBoxUserNotes.Name = "textBoxUserNotes";
             this.textBoxUserNotes.Size = new System.Drawing.Size(621, 63);
             this.textBoxUserNotes.TabIndex = 30;
             this.textBoxUserNotes.Text = "Type notes/observations here; will accompany any saved data";
             // 
+            // textBoxFastest
+            // 
+            this.textBoxFastest.Location = new System.Drawing.Point(307, 313);
+            this.textBoxFastest.Name = "textBoxFastest";
+            this.textBoxFastest.Size = new System.Drawing.Size(69, 20);
+            this.textBoxFastest.TabIndex = 31;
+            this.textBoxFastest.Text = "Fastest (ms)";
+            // 
+            // textBoxFastestResult
+            // 
+            this.textBoxFastestResult.Location = new System.Drawing.Point(316, 340);
+            this.textBoxFastestResult.Name = "textBoxFastestResult";
+            this.textBoxFastestResult.Size = new System.Drawing.Size(48, 20);
+            this.textBoxFastestResult.TabIndex = 32;
+            this.textBoxFastestResult.Text = "N/A";
+            // 
+            // labelGreenPercent
+            // 
+            this.labelGreenPercent.AutoSize = true;
+            this.labelGreenPercent.Location = new System.Drawing.Point(988, 22);
+            this.labelGreenPercent.MinimumSize = new System.Drawing.Size(20, 0);
+            this.labelGreenPercent.Name = "labelGreenPercent";
+            this.labelGreenPercent.Size = new System.Drawing.Size(20, 13);
+            this.labelGreenPercent.TabIndex = 33;
+            // 
+            // labelRedPercent
+            // 
+            this.labelRedPercent.AutoSize = true;
+            this.labelRedPercent.Location = new System.Drawing.Point(988, 48);
+            this.labelRedPercent.MinimumSize = new System.Drawing.Size(20, 0);
+            this.labelRedPercent.Name = "labelRedPercent";
+            this.labelRedPercent.Size = new System.Drawing.Size(20, 13);
+            this.labelRedPercent.TabIndex = 34;
+            // 
             // PlotPing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1012, 444);
+            this.ClientSize = new System.Drawing.Size(1030, 495);
+            this.Controls.Add(this.labelRedPercent);
+            this.Controls.Add(this.labelGreenPercent);
+            this.Controls.Add(this.textBoxFastestResult);
+            this.Controls.Add(this.textBoxFastest);
             this.Controls.Add(this.textBoxUserNotes);
             this.Controls.Add(this.listBoxNetworkInterface);
             this.Controls.Add(this.label3);
@@ -763,6 +801,10 @@
         private System.Windows.Forms.ListBox listBoxNetworkInterface;
         private System.Windows.Forms.ToolTip toolTipNetworkInterface;
         private System.Windows.Forms.TextBox textBoxUserNotes;
+        private System.Windows.Forms.TextBox textBoxFastest;
+        private System.Windows.Forms.TextBox textBoxFastestResult;
+        private System.Windows.Forms.Label labelGreenPercent;
+        private System.Windows.Forms.Label labelRedPercent;
     }
 }
 
