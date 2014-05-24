@@ -284,10 +284,15 @@ namespace PlotPing
                 // FIXME: this is reacting one iteration too late?
                 // but that's ok for a problem which goes on for a while
                 drawTable(hops); 
-            } 
+            }
             else if (!TRACEROUTE_ONCE_ONLY)
             {
                 drawTable(hops);
+            }
+            else
+            {
+                // Just update the last entry
+                updateLastTableRow(hops.Last());
             }
 
             // plot results so far
@@ -348,28 +353,40 @@ namespace PlotPing
                     ListViewItem curItem = routeListView.Items[j];
                     Hop curHop = hops[j];
 
-                    // if prev ip != cur ip
-                    if (curItem.SubItems[1].Text != curHop.ip.ToString())
-                    {
-                        curItem.SubItems[1].Text = curHop.ip.ToString();
-                    }
-
-                    // if prev time != cur time
-                    if (curItem.SubItems[2].Text != curHop.time.ToString())
-                        curItem.SubItems[2].Text = curHop.time.ToString();
-
-                    // color code pings 
-                    Color bg = curItem.SubItems[2].BackColor;
-                    if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime)
-                        curItem.SubItems[2].BackColor = Color.Lime;
-                    else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow)
-                        curItem.SubItems[2].BackColor = Color.Yellow;
-                    else if (curHop.time > MAX_PING_MS_YELLOW || curHop.time == -1 && bg != Color.Red)
-                        curItem.SubItems[2].BackColor = Color.Red;
+                    updateTableRow(curHop, curItem);
                 }
             }
 
             hideHScrollBar();
+        }
+
+        private void updateLastTableRow(Hop curHop)
+        {
+            ListViewItem curItem = routeListView.Items[routeListView.Items.Count-1];
+            updateTableRow(curHop, curItem);
+        }
+
+        private void updateTableRow(Hop curHop, ListViewItem curItem)
+        {
+            // if prev ip != cur ip
+            if (curItem.SubItems[1].Text != curHop.ip.ToString())
+            {
+                curItem.SubItems[1].Text = curHop.ip.ToString();
+            }
+
+            // if prev time != cur time
+            if (curItem.SubItems[2].Text != curHop.time.ToString())
+                curItem.SubItems[2].Text = curHop.time.ToString();
+
+            // color code pings 
+            Color bg = curItem.SubItems[2].BackColor;
+            if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime)
+                curItem.SubItems[2].BackColor = Color.Lime;
+            else if (curHop.time > MAX_PING_MS_GREEN && curHop.time <= MAX_PING_MS_YELLOW && bg != Color.Yellow)
+                curItem.SubItems[2].BackColor = Color.Yellow;
+            else if (curHop.time > MAX_PING_MS_YELLOW || curHop.time == -1 && bg != Color.Red)
+                curItem.SubItems[2].BackColor = Color.Red;
+
         }
 
         // hides the horizontal scroll bar on the traceroute table (routeListView)
