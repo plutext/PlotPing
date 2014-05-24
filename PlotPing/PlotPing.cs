@@ -452,7 +452,7 @@ namespace PlotPing
             if (curHop.time <= MAX_PING_MS_GREEN && curHop.time != -1 && bg != Color.Lime) {
                 curItem.SubItems[2].BackColor = Color.Lime;
                 // Don't count pings of our local gateway
-                if (gateway == null || !gateway.Equals(hop.ip))
+                if (gateway == null || !gateway.Equals(curHop.ip))
                 {
                     this.counterGreen++;
                 }
