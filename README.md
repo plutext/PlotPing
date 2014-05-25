@@ -30,3 +30,18 @@ Cheers, and happy pinging!
 ![](http://i.imgur.com/jdzbP.png)
 
 ![](http://i.imgur.com/rj6Hw.png)
+
+## Notes on this fork
+
+Ability to specify the interface you want to use (useful where you have multiple network connections)
+
+A notes box, so you can type stuff and capture it in a screenshot
+
+Stats (quickest ping, %green, %red)
+
+The traceroute isn't continuously performed; so usually, only the last row of the table is updated
+
+You can select and drag a row of the table to copy that IP address to your clipboard (useful if you want to ping that 
+address instead)
+
+Export to RRD (experimental)

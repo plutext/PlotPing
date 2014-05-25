@@ -84,7 +84,7 @@ namespace TraceRoute
             watch.Reset();
             watch.Start();
 
-            // make sure that the address is a vaild one
+            // make sure that the address is a valid one
             PingReply reply;
             try
             {
